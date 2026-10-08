@@ -8,7 +8,7 @@ public interface SkipTimingsProvider : ZenithProvider {
         malId: Int,
         episodeNumber: Int,
         episodeLength: Double? = null,
-        shikimoriId: Int = 0,
+        animeId: Int = 0,
         translationName: String? = null,
     ): ProviderResult<List<SkipInterval>>
 }

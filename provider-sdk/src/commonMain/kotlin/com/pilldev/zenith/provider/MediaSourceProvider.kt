@@ -7,7 +7,7 @@ import com.pilldev.zenith.provider.model.ProviderVideoSource
 
 public interface MediaSourceProvider : ZenithProvider {
     public suspend fun getSources(
-        shikimoriId: Int,
+        animeId: Int,
         animeName: String,
         russianName: String?,
     ): ProviderResult<List<ProviderVideoSource>>

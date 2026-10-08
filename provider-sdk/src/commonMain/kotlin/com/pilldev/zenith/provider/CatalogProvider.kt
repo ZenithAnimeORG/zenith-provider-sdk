@@ -16,6 +16,10 @@ public interface CatalogProvider : ZenithProvider {
     ): ProviderResult<CatalogMediaDetails>
 
     public suspend fun getHomeSections(): ProviderResult<List<CatalogSection>>
+
+    public suspend fun getRelated(
+        mediaRef: MediaRef,
+    ): ProviderResult<List<CatalogMediaItem>> = ProviderResult.Success(emptyList())
 }
 
 @Serializable
@@ -42,10 +46,12 @@ public data class CatalogMediaDetails(
     val originalTitle: String? = null,
     val description: String? = null,
     val posterUrl: String? = null,
+    val bannerUrl: String? = null,
     val score: Double? = null,
     val year: Int? = null,
     val episodesCount: Int? = null,
     val genres: List<String> = emptyList(),
+    val studios: List<String> = emptyList(),
     val status: String? = null,
 )
 

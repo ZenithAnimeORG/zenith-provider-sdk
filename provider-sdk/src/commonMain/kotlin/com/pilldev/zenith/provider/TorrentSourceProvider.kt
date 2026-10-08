@@ -7,6 +7,6 @@ public interface TorrentSourceProvider : ZenithProvider {
     public suspend fun search(
         query: String,
         russianName: String? = null,
-        shikimoriId: Int = 0,
+        animeId: Int = 0,
     ): ProviderResult<List<ProviderTorrentSource>>
 }
