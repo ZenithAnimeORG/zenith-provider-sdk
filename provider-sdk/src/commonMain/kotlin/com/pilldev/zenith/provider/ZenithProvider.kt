@@ -15,6 +15,9 @@ public interface ZenithProvider {
     public val metadata: PluginManifest
         get() = manifest
 
+    public val icon: String?
+        get() = manifest.icon
+
     public val settingsSchema: SettingsSchema?
         get() = manifest.toSettingsSchema().takeIf { it.items.isNotEmpty() }
 
