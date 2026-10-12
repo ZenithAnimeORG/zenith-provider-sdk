@@ -10,10 +10,6 @@ import com.pilldev.zenith.provider.model.toSettingsSchema
 
 public interface ZenithProvider {
     public val manifest: PluginManifest
-        get() = metadata
-
-    public val metadata: PluginManifest
-        get() = manifest
 
     public val icon: String?
         get() = manifest.icon
@@ -21,7 +17,9 @@ public interface ZenithProvider {
     public val settingsSchema: SettingsSchema?
         get() = manifest.toSettingsSchema().takeIf { it.items.isNotEmpty() }
 
-    public fun init(context: ProviderContext) {}
+    public suspend fun initialize(context: ProviderContext) {}
+
+    public suspend fun dispose()
 
     public suspend fun test(context: ProviderContext): ProviderTestResult = ProviderTestResult.Success("Провайдер доступен и готов к работе")
 

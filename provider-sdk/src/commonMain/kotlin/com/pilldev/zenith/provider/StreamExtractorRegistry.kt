@@ -7,11 +7,11 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
 public interface StreamExtractorRegistry {
-    public fun extractors(): List<StreamExtractor>
+    public suspend fun extractors(): List<StreamExtractor>
 
-    public fun register(extractor: StreamExtractor)
+    public suspend fun register(extractor: StreamExtractor)
 
-    public fun registerAll(extractors: Collection<StreamExtractor>)
+    public suspend fun registerAll(extractors: Collection<StreamExtractor>)
 
     public suspend fun extract(
         url: String,
@@ -26,14 +26,18 @@ public class DefaultStreamExtractorRegistry(
     private val mutex = Mutex()
     private val extractorsList = initialExtractors.toMutableList()
 
-    override fun extractors(): List<StreamExtractor> = extractorsList.toList()
+    override suspend fun extractors(): List<StreamExtractor> = mutex.withLock { extractorsList.toList() }
 
-    override fun register(extractor: StreamExtractor) {
-        extractorsList.add(extractor)
+    override suspend fun register(extractor: StreamExtractor) {
+        mutex.withLock {
+            extractorsList.add(extractor)
+        }
     }
 
-    override fun registerAll(extractors: Collection<StreamExtractor>) {
-        extractorsList.addAll(extractors)
+    override suspend fun registerAll(extractors: Collection<StreamExtractor>) {
+        mutex.withLock {
+            extractorsList.addAll(extractors)
+        }
     }
 
     override suspend fun extract(
@@ -42,14 +46,19 @@ public class DefaultStreamExtractorRegistry(
         context: ProviderContext?,
     ): ProviderResult<List<ProviderMediaStream>> {
         val currentExtractors = mutex.withLock { extractorsList.toList() }
+        var firstFailure: ProviderResult.Failure? = null
         for (extractor in currentExtractors) {
-            if (extractor.canExtract(url)) {
-                val result = extractor.extract(url, referer, context)
-                if (result is ProviderResult.Success && result.data.isNotEmpty()) {
-                    return result
+            when (val match = extractor.canExtract(url)) {
+                is ProviderResult.Success -> {
+                    if (!match.data) continue
+                    when (val result = extractor.extract(url, referer, context)) {
+                        is ProviderResult.Success -> if (result.data.isNotEmpty()) return result
+                        is ProviderResult.Failure -> if (firstFailure == null) firstFailure = result
+                    }
                 }
+                is ProviderResult.Failure -> if (firstFailure == null) firstFailure = match
             }
         }
-        return ProviderResult.Failure("No matching extractor found for $url")
+        return firstFailure ?: ProviderResult.Failure("No matching extractor found for $url")
     }
 }

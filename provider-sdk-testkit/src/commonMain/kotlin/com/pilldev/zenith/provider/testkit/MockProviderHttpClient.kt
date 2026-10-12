@@ -7,10 +7,27 @@ import io.ktor.client.engine.mock.respond
 import io.ktor.client.request.HttpRequestData
 import io.ktor.client.request.HttpResponseData
 import io.ktor.http.Headers
+import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.headersOf
 
 public object MockProviderHttpClient {
+    public fun withCanonicalFixtures(): HttpClient =
+        create { request ->
+            val acceptsHtml = request.headers[HttpHeaders.Accept]?.contains("text/html", ignoreCase = true) == true
+            if (acceptsHtml) {
+                respond(
+                    content = "<html><body><h1>Zenith provider contract fixture</h1></body></html>",
+                    headers = headersOf(HttpHeaders.ContentType, "text/html; charset=utf-8"),
+                )
+            } else {
+                respond(
+                    content = """{"status":"ok","data":[]}""",
+                    headers = headersOf(HttpHeaders.ContentType, "application/json"),
+                )
+            }
+        }
+
     public fun create(
         handler: suspend MockRequestHandleScope.(HttpRequestData) -> HttpResponseData,
     ): HttpClient = HttpClient(MockEngine(handler))

@@ -38,6 +38,42 @@ class ProviderSdkTest {
     }
 
     @Test
+    fun streamExtractorFailuresDoNotPreventLaterMatches() = kotlinx.coroutines.test.runTest {
+        val matchingExtractor = object : StreamExtractor {
+            override val name: String = "matching"
+
+            override suspend fun canExtract(url: String): ProviderResult<Boolean> =
+                ProviderResult.Success(true)
+
+            override suspend fun extract(
+                url: String,
+                referer: String?,
+                context: com.pilldev.zenith.provider.context.ProviderContext?,
+            ): ProviderResult<List<com.pilldev.zenith.provider.model.ProviderMediaStream>> =
+                ProviderResult.Success(listOf(com.pilldev.zenith.provider.model.ProviderMediaStream(url)))
+        }
+        val failingExtractor = object : StreamExtractor {
+            override val name: String = "failing"
+
+            override suspend fun canExtract(url: String): ProviderResult<Boolean> =
+                ProviderResult.Failure("Worker unavailable")
+
+            override suspend fun extract(
+                url: String,
+                referer: String?,
+                context: com.pilldev.zenith.provider.context.ProviderContext?,
+            ): ProviderResult<List<com.pilldev.zenith.provider.model.ProviderMediaStream>> =
+                ProviderResult.Failure("Not expected to be called")
+        }
+        val registry = DefaultStreamExtractorRegistry(listOf(failingExtractor, matchingExtractor))
+
+        val result = registry.extract("https://example.com/video")
+
+        assertTrue(result is ProviderResult.Success)
+        assertEquals("https://example.com/video", result.data.single().url)
+    }
+
+    @Test
     fun testPluginManifestSerialization() {
         val manifest = PluginManifest(
             id = ProviderId("sample"),
@@ -257,4 +293,35 @@ class ProviderSdkTest {
             assertTrue(failure is com.pilldev.zenith.provider.model.ProviderTestResult.Failure)
             assertEquals("Connection failed", failure.error)
         }
+
+    @Test
+    fun testProviderCapabilityDeserializationResilience() {
+        val json = Json { ignoreUnknownKeys = true }
+
+        val standard = json.decodeFromString<ProviderCapability>("\"TORRENT_SOURCE\"")
+        assertEquals(ProviderCapability.TORRENT_SOURCE, standard)
+
+        val alias = json.decodeFromString<ProviderCapability>("\"TORRENT\"")
+        assertEquals(ProviderCapability.TORRENT_SOURCE, alias)
+
+        val lowercaseAlias = json.decodeFromString<ProviderCapability>("\"torrent\"")
+        assertEquals(ProviderCapability.TORRENT_SOURCE, lowercaseAlias)
+
+        val unknown = json.decodeFromString<ProviderCapability>("\"FUTURE_UNSUPPORTED\"")
+        assertEquals(ProviderCapability.UNKNOWN, unknown)
+
+        val manifestJson =
+            """
+            {
+                "id": "nyaa",
+                "name": "Nyaa",
+                "version": "1.0.0",
+                "capabilities": ["TORRENT", "FUTURE_FEATURE", "MEDIA_SOURCE"]
+            }
+            """.trimIndent()
+        val manifest = json.decodeFromString<PluginManifest>(manifestJson)
+        assertTrue(manifest.capabilities.contains(ProviderCapability.TORRENT_SOURCE))
+        assertTrue(manifest.capabilities.contains(ProviderCapability.MEDIA_SOURCE))
+        assertTrue(manifest.capabilities.contains(ProviderCapability.UNKNOWN))
+    }
 }

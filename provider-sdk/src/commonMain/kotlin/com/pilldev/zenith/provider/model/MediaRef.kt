@@ -15,6 +15,8 @@ public value class MediaId(
 public data class MediaRef(
     val id: MediaId,
     val externalIds: Map<ProviderId, String> = emptyMap(),
+    val title: String = "",
+    val alternateTitles: List<String> = emptyList(),
 )
 
 @Serializable

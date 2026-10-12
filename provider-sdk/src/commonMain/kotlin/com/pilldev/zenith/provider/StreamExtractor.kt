@@ -7,11 +7,15 @@ import com.pilldev.zenith.provider.model.ProviderResult
 public interface StreamExtractor {
     public val name: String
 
-    public fun canExtract(url: String): Boolean
+    public suspend fun canExtract(url: String): ProviderResult<Boolean>
 
     public suspend fun extract(
         url: String,
         referer: String? = null,
         context: ProviderContext? = null,
     ): ProviderResult<List<ProviderMediaStream>>
+}
+
+public interface StreamExtractorProvider {
+    public fun streamExtractors(): List<StreamExtractor>
 }

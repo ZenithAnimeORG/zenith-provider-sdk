@@ -6,5 +6,5 @@ plugins {
 
 allprojects {
     group = "com.pilldev.zenith"
-    version = "2.0.0"
+    version = "0.1.0"
 }

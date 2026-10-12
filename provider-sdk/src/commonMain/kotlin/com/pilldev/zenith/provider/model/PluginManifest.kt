@@ -13,7 +13,7 @@ public data class PluginManifest(
     val id: ProviderId,
     val name: String,
     val version: String,
-    val sdkVersion: String = "2.0",
+    val sdkVersion: String = ProviderSdkInfo.VERSION,
     val description: String = "",
     val author: String? = null,
     val homepage: String? = null,
@@ -22,15 +22,12 @@ public data class PluginManifest(
     val hosts: List<String> = emptyList(),
     val entry: PluginArtifactEntry = PluginArtifactEntry(),
     val entryClass: String = "",
-    val publicKey: String? = null,
     val settings: String? = null,
     val pros: List<String> = emptyList(),
     val cons: List<String> = emptyList(),
     val settingsSchema: List<ProviderSettingSpec> = emptyList(),
     val mirrors: List<ProviderMirrorSpec> = emptyList(),
 )
-
-public typealias ProviderMetadata = PluginManifest
 
 public fun PluginManifest.toSettingsSchema(): SettingsSchema {
     val items = mutableListOf<SettingItemSpec>()

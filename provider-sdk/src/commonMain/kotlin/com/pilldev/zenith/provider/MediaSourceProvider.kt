@@ -1,5 +1,6 @@
 package com.pilldev.zenith.provider
 
+import com.pilldev.zenith.provider.model.MediaRef
 import com.pilldev.zenith.provider.model.ProviderEpisode
 import com.pilldev.zenith.provider.model.ProviderMediaStream
 import com.pilldev.zenith.provider.model.ProviderResult
@@ -7,9 +8,7 @@ import com.pilldev.zenith.provider.model.ProviderVideoSource
 
 public interface MediaSourceProvider : ZenithProvider {
     public suspend fun getSources(
-        animeId: Int,
-        animeName: String,
-        russianName: String?,
+        mediaRef: MediaRef,
     ): ProviderResult<List<ProviderVideoSource>>
 
     public suspend fun resolveStream(
