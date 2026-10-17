@@ -6,7 +6,9 @@ Official Kotlin Multiplatform SDK and testing kit for building modular media pro
 
 ## Architecture Overview
 
-The Zenith Provider ecosystem is modular and plugin-driven. Providers execute in-process and are not sandboxed; the SDK decouples media discovery, stream scraping, torrent tracking, and subtitle retrieval from the core player application.
+The Zenith Provider ecosystem is modular and plugin-driven. This SDK defines provider contracts, a typed worker adapter, protocol-v1 messages, host and worker session loops, broker-backed worker context, and bounded JVM JSON-lines transport. It does **not** implement the application host capability broker, a native process launcher, or operating-system sandbox. Zenith.App currently fails closed: provider installation and execution remain unavailable until a platform's native isolation and broker are implemented and verified. The wire protocol alone is not a security boundary.
+
+Provider package checksums detect transfer or content mismatches; they do not authenticate publishers. Unsigned community packages are intentional. Do not treat optional package signatures or manifest host declarations as protection unless a verified host runtime enforces them.
 
 ### Modules
 
@@ -20,6 +22,9 @@ The Zenith Provider ecosystem is modular and plugin-driven. Providers execute in
   - `TrackerProvider`: Synchronizes watch progress with external tracking platforms.
   - `ImportProvider`: Batch imports user watchlists and bookmark history.
   - `StreamExtractor`: Modular iframe/embed video extractor interface.
+  - `ProviderWorkerSession` / `ProviderWorkerRuntime`: Correlated host/worker session loops with bounded concurrency, deadlines, cancellation, and checksummed chunk transfer.
+  - `ProviderWorkerBrokerContext`: Worker `ProviderContext` whose Ktor HTTP requests, mirrors, stream resolution, and setting updates are routed through IPC.
+  - `JvmProviderWorkerFrameTransport`: Size-limited UTF-8 JSON-lines framing over injected JVM streams.
 
 - **`:provider-sdk-testkit`**: Deterministic test fixtures and contract verification harnesses.
   - `ProviderContractTestBase`: Verifies plugin adherence to SDK invariants.
@@ -35,6 +40,7 @@ Artifacts are currently consumed from Maven Local; they are not available from M
 ```bash
 git clone https://github.com/ZenithAnimeORG/zenith-provider-sdk.git
 cd zenith-provider-sdk
+git checkout 31352b446253ce2aaa657f5cfe5b3f176d66b572
 ./gradlew publishToMavenLocal
 ```
 
@@ -56,7 +62,7 @@ dependencies {
 }
 ```
 
-The SDK and provider contract are both at internal version `0.1.0`. These artifacts are not publicly released; breaking changes are expected during development, so no artificial major-version bump is needed.
+The SDK artifact and provider contract identifiers are both at internal version `0.1.0`. These artifacts are not publicly released; breaking changes are expected during development, so no artificial major-version bump is needed. Consumer CI workflows pin the SDK source commit separately to make builds reproducible; update those pins deliberately when adopting a newer SDK commit.
 
 ---
 

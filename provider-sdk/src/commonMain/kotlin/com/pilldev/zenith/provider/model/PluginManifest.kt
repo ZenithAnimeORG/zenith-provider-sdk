@@ -27,23 +27,41 @@ public data class PluginManifest(
     val cons: List<String> = emptyList(),
     val settingsSchema: List<ProviderSettingSpec> = emptyList(),
     val mirrors: List<ProviderMirrorSpec> = emptyList(),
+    val localizedNames: Map<String, String> = emptyMap(),
+    val localizedDescriptions: Map<String, String> = emptyMap(),
 )
+
+public fun PluginManifest.localizedName(locale: String? = null): String {
+    if (locale.isNullOrBlank()) return name
+    val exact = localizedNames[locale]
+    if (exact != null) return exact
+    val lang = locale.substringBefore('-').substringBefore('_')
+    return localizedNames[lang] ?: name
+}
+
+public fun PluginManifest.localizedDescription(locale: String? = null): String {
+    if (locale.isNullOrBlank()) return description
+    val exact = localizedDescriptions[locale]
+    if (exact != null) return exact
+    val lang = locale.substringBefore('-').substringBefore('_')
+    return localizedDescriptions[lang] ?: description
+}
 
 public fun PluginManifest.toSettingsSchema(): SettingsSchema {
     val items = mutableListOf<SettingItemSpec>()
-    if (mirrors.isNotEmpty()) {
+    val mirrorSetting = settingsSchema.firstOrNull { it.type == SettingType.MIRROR_LIST }
+    if (mirrors.isNotEmpty() && mirrorSetting == null) {
         items.add(
             SettingItemSpec.MirrorList(
                 key = "base_url",
-                title = "Зеркала",
-                description = "Список доступных рабочих зеркал провайдера",
+                title = "Mirrors",
+                description = "List of available working provider mirrors",
                 defaultMirrors = mirrors.map { it.url },
                 allowCustom = true,
             ),
         )
     }
     for (spec in settingsSchema) {
-        if (mirrors.isNotEmpty() && (spec.key == "base_url" || spec.key == "mirror")) continue
         when (spec.type) {
             SettingType.BOOLEAN -> {
                 items.add(
@@ -76,6 +94,39 @@ public fun PluginManifest.toSettingsSchema(): SettingsSchema {
                         description = spec.description,
                         options = spec.options.map { ChoiceOption(value = it, label = it) },
                         defaultValue = spec.defaultValue.orEmpty(),
+                    ),
+                )
+            }
+            SettingType.MIRROR_LIST -> {
+                items.add(
+                    SettingItemSpec.MirrorList(
+                        key = spec.key,
+                        title = spec.label,
+                        description = spec.description,
+                        defaultMirrors = spec.defaultMirrors.ifEmpty { mirrors.map { it.url } },
+                        allowCustom = spec.allowCustom,
+                    ),
+                )
+            }
+            SettingType.ACTION -> {
+                items.add(
+                    SettingItemSpec.Action(
+                        key = spec.key,
+                        title = spec.label,
+                        description = spec.description,
+                        buttonLabel = spec.buttonLabel ?: spec.label,
+                        actionId = spec.actionId ?: spec.key,
+                    ),
+                )
+            }
+            SettingType.AUTH_FORM -> {
+                items.add(
+                    SettingItemSpec.AuthForm(
+                        key = spec.key,
+                        title = spec.label,
+                        description = spec.description,
+                        authType = spec.authType,
+                        loginUrl = spec.loginUrl,
                     ),
                 )
             }

@@ -21,12 +21,12 @@ public interface ZenithProvider {
 
     public suspend fun dispose()
 
-    public suspend fun test(context: ProviderContext): ProviderTestResult = ProviderTestResult.Success("Провайдер доступен и готов к работе")
+    public suspend fun test(context: ProviderContext): ProviderTestResult = ProviderTestResult.Success("Provider is available and ready")
 
     public suspend fun executeAction(
         actionId: String,
         context: ProviderContext,
-    ): ProviderResult<String> = ProviderResult.Failure("Действие $actionId не поддерживается")
+    ): ProviderResult<String> = ProviderResult.Failure("Action $actionId is not supported")
 
     public suspend fun probeStatus(
         context: ProviderContext,

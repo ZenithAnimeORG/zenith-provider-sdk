@@ -5,7 +5,11 @@ import com.pilldev.zenith.provider.model.ProviderCapability
 import com.pilldev.zenith.provider.model.ProviderId
 import com.pilldev.zenith.provider.model.ProviderResult
 import com.pilldev.zenith.provider.model.SettingItemSpec
+import com.pilldev.zenith.provider.model.SettingType
 import com.pilldev.zenith.provider.model.SettingsSchema
+import com.pilldev.zenith.provider.model.localizedDescription
+import com.pilldev.zenith.provider.model.localizedName
+import com.pilldev.zenith.provider.model.toSettingsSchema
 import kotlinx.serialization.json.Json
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -133,6 +137,41 @@ class ProviderSdkTest {
         assertEquals("mirror", spec.key)
         assertEquals(com.pilldev.zenith.provider.model.SettingType.SELECT, spec.type)
         assertEquals(2, spec.options.size)
+    }
+
+    @Test
+    fun testManifestSettingsSchemaPreservesMirrorAndActionTypes() {
+        val manifest = PluginManifest(
+            id = ProviderId("sample"),
+            name = "Sample Provider",
+            version = "1.0.0",
+            settingsSchema = listOf(
+                com.pilldev.zenith.provider.model.ProviderSettingSpec(
+                    key = "mirror",
+                    label = "API Mirror",
+                    type = SettingType.MIRROR_LIST,
+                    defaultMirrors = listOf("https://api.example.com"),
+                ),
+                com.pilldev.zenith.provider.model.ProviderSettingSpec(
+                    key = "ping",
+                    label = "Test Connection",
+                    type = SettingType.ACTION,
+                    actionId = "ping",
+                ),
+            ),
+            mirrors = listOf(
+                com.pilldev.zenith.provider.model.ProviderMirrorSpec(
+                    url = "https://api.example.com",
+                    displayName = "Primary",
+                ),
+            ),
+        )
+
+        val settings = manifest.toSettingsSchema()
+
+        assertEquals(2, settings.items.size)
+        assertEquals("mirror", (settings.items[0] as SettingItemSpec.MirrorList).key)
+        assertEquals("ping", (settings.items[1] as SettingItemSpec.Action).actionId)
     }
 
     @Test
@@ -323,5 +362,33 @@ class ProviderSdkTest {
         assertTrue(manifest.capabilities.contains(ProviderCapability.TORRENT_SOURCE))
         assertTrue(manifest.capabilities.contains(ProviderCapability.MEDIA_SOURCE))
         assertTrue(manifest.capabilities.contains(ProviderCapability.UNKNOWN))
+    }
+
+    @Test
+    fun testLocalizedManifestFields() {
+        val manifest = PluginManifest(
+            id = ProviderId("test-id"),
+            name = "Test Provider",
+            version = "1.0.0",
+            description = "Default description",
+            localizedNames = mapOf(
+                "ru" to "Тестовый провайдер",
+                "en-US" to "Test Provider US",
+            ),
+            localizedDescriptions = mapOf(
+                "ru" to "Описание на русском",
+                "en" to "English description",
+            ),
+        )
+
+        assertEquals("Тестовый провайдер", manifest.localizedName("ru"))
+        assertEquals("Тестовый провайдер", manifest.localizedName("ru_RU"))
+        assertEquals("Test Provider US", manifest.localizedName("en-US"))
+        assertEquals("Test Provider", manifest.localizedName("fr"))
+        assertEquals("Test Provider", manifest.localizedName(null))
+
+        assertEquals("Описание на русском", manifest.localizedDescription("ru"))
+        assertEquals("English description", manifest.localizedDescription("en-GB"))
+        assertEquals("Default description", manifest.localizedDescription("es"))
     }
 }
