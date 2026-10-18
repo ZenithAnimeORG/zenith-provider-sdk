@@ -22,6 +22,9 @@ import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 import kotlin.coroutines.AbstractCoroutineContextElement
 import kotlin.coroutines.CoroutineContext
+import co.touchlab.kermit.Logger
+
+private val logger = Logger.withTag("ProviderWorkerRuntime")
 
 internal class WorkerRequestContext(
     val requestId: String,
@@ -348,6 +351,7 @@ public class ProviderWorkerRuntime(
                     initialized.complete(false)
                 }
                 if (cancelled is kotlinx.coroutines.TimeoutCancellationException) {
+                    logger.e { "Provider worker operation exceeded deadline for ${frame.message::class.simpleName} (requestId=${frame.requestId})" }
                     withContext(NonCancellable) {
                         sendFailure(
                             frame,
@@ -364,6 +368,7 @@ public class ProviderWorkerRuntime(
                     }
                 }
             } catch (error: Exception) {
+                logger.e(error) { "Provider worker operation failed for ${frame.message::class.simpleName} (requestId=${frame.requestId})" }
                 if (frame.message is ProviderWorkerMessage.Initialize && !initialized.isCompleted) {
                     initialized.complete(false)
                 }

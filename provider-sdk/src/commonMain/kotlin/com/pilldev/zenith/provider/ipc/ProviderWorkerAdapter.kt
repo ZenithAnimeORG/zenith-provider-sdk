@@ -32,6 +32,9 @@ import com.pilldev.zenith.provider.model.ProviderVideoSource
 import com.pilldev.zenith.provider.model.SkipInterval
 import com.pilldev.zenith.provider.model.UserMediaStatus
 import kotlin.coroutines.cancellation.CancellationException
+import co.touchlab.kermit.Logger
+
+private val logger = Logger.withTag("ProviderWorkerAdapter")
 
 /**
  * Platform IPC session. Implementations must complete broker callbacks before returning from [invoke],
@@ -216,7 +219,15 @@ public class ProviderWorkerAdapter(
             return unsupportedCapability(capability)
         }
         return when (val result = invokeWorker(client, operation)) {
-            is ProviderWorkerResult.Success -> decode(result.value) ?: invalidResponse(capability)
+            is ProviderWorkerResult.Success -> {
+                val decoded = decode(result.value)
+                if (decoded == null) {
+                    logger.w { "[${manifest.id.value}] Failed to decode worker result for ${operation::class.simpleName}: got ${result.value}" }
+                    invalidResponse(capability)
+                } else {
+                    decoded
+                }
+            }
             is ProviderWorkerResult.Failed -> workerFailure(result)
         }
     }
@@ -224,11 +235,15 @@ public class ProviderWorkerAdapter(
     private fun <T> unsupportedCapability(capability: ProviderCapability): ProviderResult<T> =
         ProviderResult.Failure("Provider does not declare the $capability capability")
 
-    private fun <T> invalidResponse(capability: ProviderCapability?): ProviderResult<T> =
-        ProviderResult.Failure("Worker returned an invalid response for ${capability ?: "provider"}")
+    private fun <T> invalidResponse(capability: ProviderCapability?): ProviderResult<T> {
+        logger.w { "[${manifest.id.value}] Worker returned invalid response for ${capability ?: "provider"}" }
+        return ProviderResult.Failure("Worker returned an invalid response for ${capability ?: "provider"}")
+    }
 
-    private fun <T> workerFailure(result: ProviderWorkerResult.Failed): ProviderResult<T> =
-        ProviderResult.Failure("Worker ${result.code}: ${result.message}")
+    private fun <T> workerFailure(result: ProviderWorkerResult.Failed): ProviderResult<T> {
+        logger.w { "[${manifest.id.value}] Worker operation failed (${result.code}): ${result.message}" }
+        return ProviderResult.Failure("Worker ${result.code}: ${result.message}")
+    }
 }
 
 private class ProviderWorkerStreamExtractor(
@@ -254,9 +269,19 @@ private class ProviderWorkerStreamExtractor(
         decode: (ProviderWorkerValue) -> ProviderResult<T>?,
     ): ProviderResult<T> =
         when (val result = invokeWorker(client, operation)) {
-            is ProviderWorkerResult.Success -> decode(result.value)
-                ?: ProviderResult.Failure("Worker returned an invalid stream-extractor response")
-            is ProviderWorkerResult.Failed -> ProviderResult.Failure("Worker ${result.code}: ${result.message}")
+            is ProviderWorkerResult.Success -> {
+                val decoded = decode(result.value)
+                if (decoded == null) {
+                    logger.w { "Failed to decode worker stream extractor result for ${operation::class.simpleName}: got ${result.value}" }
+                    ProviderResult.Failure("Worker returned an invalid stream-extractor response")
+                } else {
+                    decoded
+                }
+            }
+            is ProviderWorkerResult.Failed -> {
+                logger.w { "Worker stream extractor operation failed (${result.code}): ${result.message}" }
+                ProviderResult.Failure("Worker ${result.code}: ${result.message}")
+            }
         }
 }
 
@@ -269,6 +294,7 @@ private suspend fun invokeWorker(
     } catch (cancellation: CancellationException) {
         throw cancellation
     } catch (error: Throwable) {
+        logger.e(error) { "Worker client crashed invoking ${operation::class.simpleName}" }
         ProviderWorkerResult.Failed(
             ProviderWorkerFailureCode.WORKER_CRASHED,
             error.message ?: "Provider worker invocation failed",

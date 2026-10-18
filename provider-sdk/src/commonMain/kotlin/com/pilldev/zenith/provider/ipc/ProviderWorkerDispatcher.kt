@@ -90,6 +90,7 @@ public class ProviderWorkerDispatcher(
             disposeAfterFailedInitialization(created, cancellation)
             throw cancellation
         } catch (error: Exception) {
+            logger.e(error) { "Provider initialization failed for ${message.manifest.id.value}" }
             disposeAfterFailedInitialization(created, error)
             failureFrame(
                 frame,
@@ -135,6 +136,7 @@ public class ProviderWorkerDispatcher(
         } catch (cancellation: CancellationException) {
             throw cancellation
         } catch (error: Exception) {
+            logger.e(error) { "Provider operation ${operation::class.simpleName} failed for ${installedManifest?.id?.value}" }
             complete(
                 frame,
                 ProviderWorkerResult.Failed(
@@ -341,7 +343,9 @@ public class ProviderWorkerDispatcher(
     ): ProviderWorkerResult =
         when (result) {
             is ProviderResult.Success -> ProviderWorkerResult.Success(value(result.data))
-            is ProviderResult.Failure ->
+            is ProviderResult.Failure -> {
+                logger.w { "Provider operation returned failure: ${result.message}" }
                 ProviderWorkerResult.Failed(ProviderWorkerFailureCode.PROVIDER_FAILURE, result.message)
+            }
         }
 }
