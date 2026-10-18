@@ -4,7 +4,9 @@ import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText
+import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
+import io.ktor.http.contentType
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -18,6 +20,7 @@ class ProviderWorkerBrokerHttpClientTest {
                 assertEquals("https://provider.example/api", operation.url)
                 assertEquals("POST", operation.method)
                 assertEquals(listOf("client-test"), operation.headers["X-Client-Test"])
+                assertEquals(listOf(ContentType.Application.Json.toString()), operation.headers[HttpHeaders.ContentType])
                 assertEquals("payload".encodeToByteArray().toList(), requestBody?.toList())
                 ProviderWorkerBrokerResponse(
                     ProviderBrokerResult.HttpResponse(
@@ -34,6 +37,7 @@ class ProviderWorkerBrokerHttpClientTest {
 
         val response = client.post("https://provider.example/api") {
             header("X-Client-Test", "client-test")
+            contentType(ContentType.Application.Json)
             setBody("payload")
         }
 

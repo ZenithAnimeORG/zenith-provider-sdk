@@ -6,6 +6,7 @@ import io.ktor.client.engine.callContext
 import io.ktor.client.request.HttpRequestData
 import io.ktor.client.request.HttpResponseData
 import io.ktor.http.Headers
+import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpProtocolVersion
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.content.OutgoingContent
@@ -78,7 +79,13 @@ private class ProviderWorkerBrokerHttpEngine(
         val headers = linkedMapOf<String, MutableList<String>>()
         data.headers.appendTo(headers)
         data.body.headers.appendTo(headers)
+        data.body.contentType?.let { contentType ->
+            if (headers.keys.none { it.equals(HttpHeaders.ContentType, ignoreCase = true) }) {
+                headers.getOrPut(HttpHeaders.ContentType) { mutableListOf() }.add(contentType.toString())
+            }
+        }
         val workerContext = data.attributes.getOrNull(WorkerRequestContextAttributeKey)
+            ?: currentCoroutineContext()[WorkerRequestContext]
         val response = if (workerContext != null) {
             withContext(workerContext) {
                 exchange(
