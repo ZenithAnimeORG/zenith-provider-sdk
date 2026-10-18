@@ -15,6 +15,12 @@ import io.ktor.utils.io.readAvailable
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import io.ktor.client.request.HttpRequestPipeline
+import io.ktor.util.AttributeKey
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.withContext
+import kotlin.coroutines.CoroutineContext
 import kotlinx.io.Buffer
 import kotlinx.io.readByteArray
 import kotlinx.io.write
@@ -44,8 +50,17 @@ public fun createProviderWorkerBrokerHttpClient(
     require(maxResponseBytes in 1..PROVIDER_WORKER_MAX_BLOB_BYTES.toInt()) {
         "Provider HTTP response limit must be between 1 byte and the worker blob limit"
     }
-    return HttpClient(ProviderWorkerBrokerHttpEngine(exchange, maxRequestBytes, maxResponseBytes))
+    val client = HttpClient(ProviderWorkerBrokerHttpEngine(exchange, maxRequestBytes, maxResponseBytes))
+    client.requestPipeline.intercept(HttpRequestPipeline.State) {
+        val workerContext = currentCoroutineContext()[WorkerRequestContext]
+        if (workerContext != null) {
+            context.attributes.put(WorkerRequestContextAttributeKey, workerContext)
+        }
+    }
+    return client
 }
+
+internal val WorkerRequestContextAttributeKey = AttributeKey<WorkerRequestContext>("WorkerRequestContext")
 
 private class ProviderWorkerBrokerHttpEngine(
     private val exchange: suspend (
@@ -63,15 +78,30 @@ private class ProviderWorkerBrokerHttpEngine(
         val headers = linkedMapOf<String, MutableList<String>>()
         data.headers.appendTo(headers)
         data.body.headers.appendTo(headers)
-        val response = exchange(
-            ProviderBrokerOperation.HttpRequest(
-                url = data.url.toString(),
-                method = data.method.value,
-                headers = headers,
-                body = null,
-            ),
-            requestBody.takeIf { it.isNotEmpty() },
-        )
+        val workerContext = data.attributes.getOrNull(WorkerRequestContextAttributeKey)
+        val response = if (workerContext != null) {
+            withContext(workerContext) {
+                exchange(
+                    ProviderBrokerOperation.HttpRequest(
+                        url = data.url.toString(),
+                        method = data.method.value,
+                        headers = headers,
+                        body = null,
+                    ),
+                    requestBody.takeIf { it.isNotEmpty() },
+                )
+            }
+        } else {
+            exchange(
+                ProviderBrokerOperation.HttpRequest(
+                    url = data.url.toString(),
+                    method = data.method.value,
+                    headers = headers,
+                    body = null,
+                ),
+                requestBody.takeIf { it.isNotEmpty() },
+            )
+        }
         val httpResponse = response.result as? ProviderBrokerResult.HttpResponse
             ?: throw ProviderWorkerBrokerException(response.result)
         val responseBody = response.responseBody ?: ByteArray(0)

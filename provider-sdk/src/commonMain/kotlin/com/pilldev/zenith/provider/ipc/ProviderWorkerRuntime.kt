@@ -23,7 +23,7 @@ import kotlinx.coroutines.withTimeout
 import kotlin.coroutines.AbstractCoroutineContextElement
 import kotlin.coroutines.CoroutineContext
 
-private class WorkerRequestContext(
+internal class WorkerRequestContext(
     val requestId: String,
 ) : AbstractCoroutineContextElement(Key) {
     companion object Key : CoroutineContext.Key<WorkerRequestContext>

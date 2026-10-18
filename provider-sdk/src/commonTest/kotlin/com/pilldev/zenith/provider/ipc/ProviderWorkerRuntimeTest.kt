@@ -6,6 +6,8 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
+import io.ktor.client.request.get
+import io.ktor.client.statement.bodyAsText
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -121,6 +123,80 @@ class ProviderWorkerRuntimeTest {
                 message = ProviderWorkerMessage.BrokerComplete(ProviderBrokerResult.UnitResult),
             ),
         )
+
+        val complete = host.receive()
+        val result = assertIs<ProviderWorkerMessage.Complete>(complete.message)
+        assertEquals("invoke", complete.inReplyTo)
+        assertEquals(ProviderWorkerValue.UnitResult, (result.result as ProviderWorkerResult.Success).value)
+
+        host.send(request("dispose", ProviderWorkerMessage.Dispose))
+        assertIs<ProviderWorkerMessage.Disposed>(host.receive().message)
+        runtimeJob.cancelAndJoin()
+    }
+
+    @Test
+    fun runtimeServicesBrokerHttpClientRequests() = kotlinx.coroutines.runBlocking {
+        val manifest = PluginManifest(id = ProviderId("runtime-http-test"), name = "Runtime HTTP test", version = "1")
+        val responseBody = "http-response-body".encodeToByteArray()
+        val digest = ProviderWorkerDigest { "e".repeat(64) }
+        val (host, worker) = inMemoryTransports()
+        val runtime = ProviderWorkerRuntime(
+            transport = worker,
+            digest = digest,
+            scope = this,
+            createHandler = { context ->
+                ProviderWorkerFrameHandler { frame ->
+                    when (val message = frame.message) {
+                        is ProviderWorkerMessage.Initialize ->
+                            response(
+                                requestId = "ready",
+                                inReplyTo = frame.requestId,
+                                message = ProviderWorkerMessage.Ready(message.manifest),
+                            )
+                        is ProviderWorkerMessage.Invoke -> {
+                            val brokerContext = ProviderWorkerBrokerContext(context.broker, context.settings)
+                            val httpResponse = brokerContext.httpClient.get("https://provider.example/test")
+                            assertEquals("http-response-body", httpResponse.bodyAsText())
+                            response(
+                                requestId = "complete",
+                                inReplyTo = frame.requestId,
+                                message = ProviderWorkerMessage.Complete(
+                                    ProviderWorkerResult.Success(ProviderWorkerValue.UnitResult),
+                                ),
+                            )
+                        }
+                        ProviderWorkerMessage.Dispose ->
+                            response(
+                                requestId = "disposed",
+                                inReplyTo = frame.requestId,
+                                message = ProviderWorkerMessage.Disposed,
+                            )
+                        else -> error("Unexpected request")
+                    }
+                }
+            },
+        )
+        val runtimeJob = launch { runtime.run() }
+        host.send(request("initialize", ProviderWorkerMessage.Initialize(manifest, emptyMap())))
+        assertIs<ProviderWorkerMessage.Ready>(host.receive().message)
+
+        host.send(request("invoke", ProviderWorkerMessage.Invoke(ProviderWorkerOperation.ProbeStatus)))
+        val brokerFrame = host.receive()
+        val brokerRequest = assertIs<ProviderWorkerMessage.BrokerRequest>(brokerFrame.message)
+        val httpRequest = assertIs<ProviderBrokerOperation.HttpRequest>(brokerRequest.operation)
+        assertEquals("https://provider.example/test", httpRequest.url)
+
+        val responseBlob = ProviderWorkerBlob("host_response", responseBody.size.toLong(), "e".repeat(64))
+        host.send(
+            response(
+                requestId = "broker_complete",
+                inReplyTo = brokerFrame.requestId,
+                message = ProviderWorkerMessage.BrokerComplete(
+                    ProviderBrokerResult.HttpResponse(200, body = responseBlob),
+                ),
+            ),
+        )
+        sendBlob(host, responseBlob.transferId, brokerFrame.requestId, responseBody)
 
         val complete = host.receive()
         val result = assertIs<ProviderWorkerMessage.Complete>(complete.message)

@@ -81,4 +81,23 @@ class ProviderWorkerBrokerHttpClientTest {
         assertEquals("request denied", failure.message)
         client.close()
     }
+
+    @Test
+    fun brokerHttpClientPreservesWorkerRequestContextInExchange() = kotlinx.coroutines.test.runTest {
+        var contextInExchange: kotlin.coroutines.CoroutineContext? = null
+        val client = createProviderWorkerBrokerHttpClient(
+            exchange = { _, _ ->
+                contextInExchange = kotlinx.coroutines.currentCoroutineContext()
+                ProviderWorkerBrokerResponse(
+                    ProviderBrokerResult.HttpResponse(200),
+                )
+            },
+        )
+        kotlinx.coroutines.withContext(WorkerRequestContext("test_req_123")) {
+            client.post("https://provider.example/api")
+        }
+        assertEquals("test_req_123", contextInExchange?.get(WorkerRequestContext)?.requestId)
+        client.close()
+    }
 }
+
