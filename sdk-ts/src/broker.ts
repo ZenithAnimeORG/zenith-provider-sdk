@@ -7,11 +7,53 @@ export interface FetchInit {
   timeoutMillis?: number;
 }
 
+export class FetchHeaders {
+  private readonly map = new Map<string, string>();
+
+  constructor(init?: Record<string, any> | null) {
+    if (!init) return;
+    for (const [key, val] of Object.entries(init)) {
+      if (val === null || val === undefined) continue;
+      const lowerKey = key.toLowerCase();
+      const stringVal = Array.isArray(val) ? val.join(", ") : String(val);
+      this.map.set(lowerKey, stringVal);
+      (this as any)[key] = stringVal;
+      (this as any)[lowerKey] = stringVal;
+    }
+  }
+
+  get(name: string): string | null {
+    return this.map.get(name.toLowerCase()) ?? null;
+  }
+
+  has(name: string): boolean {
+    return this.map.has(name.toLowerCase());
+  }
+
+  forEach(callback: (value: string, key: string) => void): void {
+    this.map.forEach((value, key) => callback(value, key));
+  }
+
+  entries(): IterableIterator<[string, string]> {
+    return this.map.entries();
+  }
+
+  keys(): IterableIterator<string> {
+    return this.map.keys();
+  }
+
+  values(): IterableIterator<string> {
+    return this.map.values();
+  }
+
+  [key: string]: any;
+}
+
 export interface FetchResponse {
   status: number;
   statusText: string;
   ok: boolean;
-  headers: Record<string, string>;
+  headers: FetchHeaders;
   text(): Promise<string>;
   json<T = any>(): Promise<T>;
 }
@@ -107,7 +149,7 @@ export class ProviderContext {
       const parsed = JSON.parse(responseRaw);
       const status = parsed.statusCode ?? parsed.status ?? 200;
       const body = parsed.body ?? "";
-      const headers = (parsed.headers as Record<string, string>) ?? {};
+      const headers = new FetchHeaders(parsed.headers);
 
       return {
         status,
@@ -135,12 +177,13 @@ export class ProviderContext {
       res.headers.forEach((v, k) => {
         headersRecord[k] = v;
       });
+      const headers = new FetchHeaders(headersRecord);
 
       return {
         status: res.status,
         statusText: res.statusText,
         ok: res.ok,
-        headers: headersRecord,
+        headers,
         async text() {
           return text;
         },

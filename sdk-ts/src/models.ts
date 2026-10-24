@@ -120,16 +120,18 @@ export interface SkipInterval {
 }
 
 export interface ProviderStatusInfo {
-  isOperational: boolean;
-  latencyMs?: number;
+  status?: string;
+  details?: Record<string, string>;
+  latencyMs?: number | null;
+  isOperational?: boolean;
   message?: string;
 }
 
-export interface ProviderTestResult {
-  success: boolean;
-  message: string;
-  latencyMs?: number;
-}
+export type ProviderTestResult =
+  | { success: true; message: string; latencyMs?: number; type?: "Success" }
+  | { success: false; error: string; message?: string; latencyMs?: number; type?: "Failure" }
+  | { type: "Success"; message: string; latencyMs?: number; success?: boolean }
+  | { type: "Failure"; error: string; message?: string; latencyMs?: number; success?: boolean };
 
 export interface ImportInstructionStep {
   stepNumber: number;

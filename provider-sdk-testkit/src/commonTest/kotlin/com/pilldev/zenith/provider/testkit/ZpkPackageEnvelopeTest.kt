@@ -80,13 +80,30 @@ class ZpkPackageEnvelopeTest {
     }
 
     @Test
+    fun testRejectsDuplicateEntriesInEntryList() {
+        val duplicateList = listOf(
+            ZpkPackageEnvelope.ZpkEntry("manifest.json", 512L),
+            ZpkPackageEnvelope.ZpkEntry("index.js", 50_000L),
+            ZpkPackageEnvelope.ZpkEntry("index.js", 60_000L),
+        )
+
+        val result = ZpkPackageEnvelope.validateEnvelope(baseManifest, duplicateList)
+        assertFalse(result.isValid)
+        assertTrue((result as ZpkPackageEnvelope.ValidationResult.Invalid).errors.any { it.contains("Duplicate entry") })
+    }
+
+    @Test
     fun testSafeEntryNameDetection() {
         assertTrue(ZpkPackageEnvelope.isSafeEntryName("manifest.json"))
         assertTrue(ZpkPackageEnvelope.isSafeEntryName("index.js"))
         assertTrue(ZpkPackageEnvelope.isSafeEntryName("resources/logo.png"))
+        assertFalse(ZpkPackageEnvelope.isSafeEntryName("."))
+        assertFalse(ZpkPackageEnvelope.isSafeEntryName(".."))
         assertFalse(ZpkPackageEnvelope.isSafeEntryName("../secret.txt"))
         assertFalse(ZpkPackageEnvelope.isSafeEntryName("/absolute/path"))
         assertFalse(ZpkPackageEnvelope.isSafeEntryName("\\windows\\path"))
         assertFalse(ZpkPackageEnvelope.isSafeEntryName("foo/../../bar"))
+        assertFalse(ZpkPackageEnvelope.isSafeEntryName("foo/./bar"))
+        assertFalse(ZpkPackageEnvelope.isSafeEntryName("foo//bar"))
     }
 }

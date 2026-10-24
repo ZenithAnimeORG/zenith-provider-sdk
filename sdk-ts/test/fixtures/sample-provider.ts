@@ -27,4 +27,36 @@ export default defineProvider({
       hasNextPage: false,
     };
   },
+
+  async resolveEpisode(episode, context) {
+    const url = episode.url || "https://stream.example.com/master.m3u8";
+    return [
+      {
+        url,
+        quality: "1080p",
+        isHls: true,
+      },
+    ];
+  },
+
+  async searchTorrents(mediaRef, context) {
+    return [
+      {
+        title: `${mediaRef.title} [1080p Web-DL]`,
+        magnetUri: "magnet:?xt=urn:btih:0123456789abcdef0123456789abcdef01234567",
+        seeders: 120,
+        leechers: 8,
+      },
+    ];
+  },
+
+  async getSkipTimes(mediaRef, episodeNumber, episodeLength, translationName, context) {
+    return [
+      {
+        startTime: 90,
+        endTime: 180,
+        skipType: "op",
+      },
+    ];
+  },
 });

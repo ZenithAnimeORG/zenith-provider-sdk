@@ -26,6 +26,7 @@ export interface ProviderDefinition {
   dispose?(): Promise<void>;
   test?(context: ProviderContext): Promise<ProviderTestResult>;
   probeStatus?(context: ProviderContext): Promise<ProviderStatusInfo>;
+  executeAction?(actionId: string, context: ProviderContext): Promise<string>;
 
   // CATALOG Capability
   getSearch?(
@@ -38,16 +39,25 @@ export interface ProviderDefinition {
   getHomeSections?(context: ProviderContext): Promise<CatalogSection[]>;
   getPopular?(page: number, pageSize: number, context: ProviderContext): Promise<CatalogMediaItem[]>;
   getLatest?(page: number, pageSize: number, context: ProviderContext): Promise<CatalogMediaItem[]>;
+  getRelated?(mediaRef: MediaRef, context: ProviderContext): Promise<CatalogMediaItem[]>;
   getEpisodes?(mediaRef: MediaRef, context: ProviderContext): Promise<ProviderEpisode[]>;
 
   // MEDIA_SOURCE Capability
   getSources?(
     mediaRef: MediaRef,
-    episodeNumber: number,
-    context: ProviderContext
+    context: ProviderContext,
+    episodeNumber?: number
   ): Promise<ProviderVideoSource[]>;
+  resolveEpisode?(
+    episode: ProviderEpisode,
+    context: ProviderContext
+  ): Promise<ProviderMediaStream[]>;
 
   // TORRENT_SOURCE Capability
+  searchTorrents?(
+    mediaRef: MediaRef,
+    context: ProviderContext
+  ): Promise<ProviderTorrentSource[]>;
   getTorrentSources?(
     mediaRef: MediaRef,
     episodeNumber: number,
@@ -55,6 +65,17 @@ export interface ProviderDefinition {
   ): Promise<ProviderTorrentSource[]>;
 
   // SUBTITLES Capability
+  searchSubtitles?(
+    query: string,
+    languages: string,
+    episodeNumber: number | null,
+    seasonNumber: number | null,
+    context: ProviderContext
+  ): Promise<ProviderSubtitle[]>;
+  getSubtitleDownloadLink?(
+    fileId: number,
+    context: ProviderContext
+  ): Promise<string | null>;
   getSubtitles?(
     mediaRef: MediaRef,
     episodeNumber: number,
@@ -62,6 +83,13 @@ export interface ProviderDefinition {
   ): Promise<ProviderSubtitle[]>;
 
   // SKIP_TIMINGS Capability
+  getSkipTimes?(
+    mediaRef: MediaRef,
+    episodeNumber: number,
+    episodeLength: number | null,
+    translationName: string | null,
+    context: ProviderContext
+  ): Promise<SkipInterval[]>;
   getSkipTimings?(
     mediaRef: MediaRef,
     episodeNumber: number,
@@ -72,6 +100,17 @@ export interface ProviderDefinition {
   getPoster?(mediaRef: MediaRef, context: ProviderContext): Promise<string | null>;
 
   // STREAM_EXTRACTOR Capability
+  canExtractStream?(
+    extractorName: string,
+    url: string,
+    context: ProviderContext
+  ): Promise<boolean>;
+  extractStream?(
+    extractorName: string,
+    url: string,
+    referer: string | null,
+    context: ProviderContext
+  ): Promise<ProviderMediaStream[]>;
   resolveStream?(
     extractorName: string,
     url: string,
@@ -79,6 +118,16 @@ export interface ProviderDefinition {
   ): Promise<ProviderMediaStream[]>;
 
   // TRACKER Capability
+  onEpisodeWatched?(
+    mediaRef: MediaRef,
+    episode: number,
+    context: ProviderContext
+  ): Promise<void>;
+  syncStatus?(
+    mediaRef: MediaRef,
+    status: UserMediaStatus,
+    context: ProviderContext
+  ): Promise<void>;
   getUserMediaStatus?(mediaRef: MediaRef, context: ProviderContext): Promise<UserMediaStatus>;
   updateUserMediaStatus?(
     mediaRef: MediaRef,

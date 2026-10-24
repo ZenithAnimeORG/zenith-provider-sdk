@@ -3,10 +3,14 @@ package com.pilldev.zenith.provider.testkit
 import com.pilldev.zenith.provider.CatalogMediaDetails
 import com.pilldev.zenith.provider.CatalogSearchResult
 import com.pilldev.zenith.provider.ImportBatch
+import com.pilldev.zenith.provider.ipc.ProviderWorkerFailureCode
+import com.pilldev.zenith.provider.ipc.ProviderWorkerResult
+import com.pilldev.zenith.provider.ipc.ProviderWorkerValue
 import com.pilldev.zenith.provider.model.PACKAGE_FORMAT_V2
 import com.pilldev.zenith.provider.model.PluginManifest
 import com.pilldev.zenith.provider.model.ProviderCapability
 import com.pilldev.zenith.provider.model.ProviderId
+import com.pilldev.zenith.provider.model.ProviderTestResult
 import com.pilldev.zenith.provider.model.ProviderTranslationType
 import com.pilldev.zenith.provider.model.ProviderVideoSource
 import com.pilldev.zenith.provider.model.UserMediaStatus
@@ -221,5 +225,58 @@ class CrossLanguageGoldenTest {
         assertEquals(10, entry.rating)
         assertEquals(24, entry.watchedEpisodes)
         assertEquals(24, entry.totalEpisodes)
+    }
+
+    @Test
+    fun testProviderWorkerResultSuccessGoldenDeserialization() {
+        val successJson = """{
+            "type": "Success",
+            "value": {
+                "type": "CatalogSearch",
+                "result": {
+                    "items": [
+                        {
+                            "mediaRef": {
+                                "id": "1",
+                                "title": "Cowboy Bebop"
+                            },
+                            "title": "Cowboy Bebop"
+                        }
+                    ],
+                    "hasNextPage": false
+                }
+            }
+        }"""
+        val result = json.decodeFromString(ProviderWorkerResult.serializer(), successJson)
+        assertTrue(result is ProviderWorkerResult.Success)
+        val value = result.value
+        assertTrue(value is ProviderWorkerValue.CatalogSearch)
+        assertEquals("Cowboy Bebop", value.result.items[0].title)
+    }
+
+    @Test
+    fun testProviderWorkerResultFailedGoldenDeserialization() {
+        val failedJson = """{
+            "type": "Failed",
+            "code": "PROVIDER_FAILURE",
+            "message": "Upstream timeout"
+        }"""
+        val result = json.decodeFromString(ProviderWorkerResult.serializer(), failedJson)
+        assertTrue(result is ProviderWorkerResult.Failed)
+        assertEquals(ProviderWorkerFailureCode.PROVIDER_FAILURE, result.code)
+        assertEquals("Upstream timeout", result.message)
+    }
+
+    @Test
+    fun testProviderTestResultSuccessGoldenDeserialization() {
+        val testJson = """{
+            "type": "Success",
+            "message": "All systems operational",
+            "latencyMs": 42
+        }"""
+        val result = json.decodeFromString(ProviderTestResult.serializer(), testJson)
+        assertTrue(result is ProviderTestResult.Success)
+        assertEquals("All systems operational", result.message)
+        assertEquals(42L, result.latencyMs)
     }
 }

@@ -18,6 +18,7 @@ import com.pilldev.zenith.provider.model.ProviderTorrentSource
 import com.pilldev.zenith.provider.model.ProviderVideoSource
 import com.pilldev.zenith.provider.model.SkipInterval
 import com.pilldev.zenith.provider.model.UserMediaStatus
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.decodeFromString
@@ -41,12 +42,14 @@ public data class ProviderWorkerFrame(
 @Serializable
 public sealed interface ProviderWorkerMessage {
     @Serializable
+    @SerialName("Initialize")
     public data class Initialize(
         val manifest: PluginManifest,
         val settings: Map<String, String> = emptyMap(),
     ) : ProviderWorkerMessage
 
     @Serializable
+    @SerialName("Ready")
     public data class Ready(
         val manifest: PluginManifest,
         val importExtensions: List<String> = emptyList(),
@@ -55,37 +58,45 @@ public sealed interface ProviderWorkerMessage {
     ) : ProviderWorkerMessage
 
     @Serializable
+    @SerialName("Invoke")
     public data class Invoke(
         val operation: ProviderWorkerOperation,
     ) : ProviderWorkerMessage
 
     @Serializable
+    @SerialName("BrokerRequest")
     public data class BrokerRequest(
         val operation: ProviderBrokerOperation,
     ) : ProviderWorkerMessage
 
     @Serializable
+    @SerialName("Complete")
     public data class Complete(
         val result: ProviderWorkerResult,
     ) : ProviderWorkerMessage
 
     @Serializable
+    @SerialName("BrokerComplete")
     public data class BrokerComplete(
         val result: ProviderBrokerResult,
     ) : ProviderWorkerMessage
 
     @Serializable
+    @SerialName("Cancel")
     public data class Cancel(
         val targetRequestId: String,
     ) : ProviderWorkerMessage
 
     @Serializable
+    @SerialName("Dispose")
     public data object Dispose : ProviderWorkerMessage
 
     @Serializable
+    @SerialName("Disposed")
     public data object Disposed : ProviderWorkerMessage
 
     @Serializable
+    @SerialName("BlobChunk")
     public data class BlobChunk(
         val transferId: String,
         val sequence: Int,
@@ -94,6 +105,7 @@ public sealed interface ProviderWorkerMessage {
     ) : ProviderWorkerMessage
 
     @Serializable
+    @SerialName("Failure")
     public data class Failure(
         val code: ProviderWorkerFailureCode,
         val message: String,
@@ -114,9 +126,11 @@ public enum class ProviderWorkerFailureCode {
 @Serializable
 public sealed interface ProviderWorkerResult {
     @Serializable
+    @SerialName("Success")
     public data class Success(val value: ProviderWorkerValue) : ProviderWorkerResult
 
     @Serializable
+    @SerialName("Failed")
     public data class Failed(
         val code: ProviderWorkerFailureCode,
         val message: String,
@@ -126,69 +140,90 @@ public sealed interface ProviderWorkerResult {
 @Serializable
 public sealed interface ProviderWorkerValue {
     @Serializable
+    @SerialName("Test")
     public data class Test(val result: ProviderTestResult) : ProviderWorkerValue
 
     @Serializable
+    @SerialName("Status")
     public data class Status(val result: ProviderStatusInfo) : ProviderWorkerValue
 
     @Serializable
+    @SerialName("BooleanResult")
     public data class BooleanResult(val value: Boolean) : ProviderWorkerValue
 
     @Serializable
+    @SerialName("CatalogSearch")
     public data class CatalogSearch(val result: CatalogSearchResult) : ProviderWorkerValue
 
     @Serializable
+    @SerialName("CatalogDetails")
     public data class CatalogDetails(val result: CatalogMediaDetails) : ProviderWorkerValue
 
     @Serializable
+    @SerialName("CatalogSections")
     public data class CatalogSections(val result: List<CatalogSection>) : ProviderWorkerValue
 
     @Serializable
+    @SerialName("CatalogItems")
     public data class CatalogItems(val result: List<CatalogMediaItem>) : ProviderWorkerValue
 
     @Serializable
+    @SerialName("VideoSources")
     public data class VideoSources(val result: List<ProviderVideoSource>) : ProviderWorkerValue
 
     @Serializable
+    @SerialName("MediaStreams")
     public data class MediaStreams(val result: List<ProviderMediaStream>) : ProviderWorkerValue
 
     @Serializable
+    @SerialName("TorrentSources")
     public data class TorrentSources(val result: List<ProviderTorrentSource>) : ProviderWorkerValue
 
     @Serializable
+    @SerialName("Poster")
     public data class Poster(val url: String?) : ProviderWorkerValue
 
     @Serializable
+    @SerialName("SkipTimes")
     public data class SkipTimes(val result: List<SkipInterval>) : ProviderWorkerValue
 
     @Serializable
+    @SerialName("Subtitles")
     public data class Subtitles(val result: List<ProviderSubtitle>) : ProviderWorkerValue
 
     @Serializable
+    @SerialName("DownloadLink")
     public data class DownloadLink(val url: String?) : ProviderWorkerValue
 
     @Serializable
+    @SerialName("ImportData")
     public data class ImportData(val result: ImportBatch) : ProviderWorkerValue
 
     @Serializable
+    @SerialName("ImportPreview")
     public data class ImportPreview(val result: ImportPreviewResult) : ProviderWorkerValue
 
     @Serializable
+    @SerialName("ActionResult")
     public data class ActionResult(val result: String) : ProviderWorkerValue
 
     @Serializable
+    @SerialName("UnitResult")
     public data object UnitResult : ProviderWorkerValue
 }
 
 @Serializable
 public sealed interface ProviderWorkerOperation {
     @Serializable
+    @SerialName("Test")
     public data class Test(val settings: Map<String, String> = emptyMap()) : ProviderWorkerOperation
 
     @Serializable
+    @SerialName("ProbeStatus")
     public data object ProbeStatus : ProviderWorkerOperation
 
     @Serializable
+    @SerialName("CatalogSearch")
     public data class CatalogSearch(
         val query: String,
         val page: Int,
@@ -196,27 +231,35 @@ public sealed interface ProviderWorkerOperation {
     ) : ProviderWorkerOperation
 
     @Serializable
+    @SerialName("CatalogDetails")
     public data class CatalogDetails(val mediaRef: MediaRef) : ProviderWorkerOperation
 
     @Serializable
+    @SerialName("CatalogHomeSections")
     public data object CatalogHomeSections : ProviderWorkerOperation
 
     @Serializable
+    @SerialName("CatalogRelated")
     public data class CatalogRelated(val mediaRef: MediaRef) : ProviderWorkerOperation
 
     @Serializable
+    @SerialName("MediaSources")
     public data class MediaSources(val mediaRef: MediaRef) : ProviderWorkerOperation
 
     @Serializable
+    @SerialName("ResolveEpisode")
     public data class ResolveEpisode(val episode: ProviderEpisode) : ProviderWorkerOperation
 
     @Serializable
+    @SerialName("TorrentSearch")
     public data class TorrentSearch(val mediaRef: MediaRef) : ProviderWorkerOperation
 
     @Serializable
+    @SerialName("Poster")
     public data class Poster(val mediaRef: MediaRef) : ProviderWorkerOperation
 
     @Serializable
+    @SerialName("SkipTimes")
     public data class SkipTimes(
         val mediaRef: MediaRef,
         val episodeNumber: Int,
@@ -225,6 +268,7 @@ public sealed interface ProviderWorkerOperation {
     ) : ProviderWorkerOperation
 
     @Serializable
+    @SerialName("SubtitleSearch")
     public data class SubtitleSearch(
         val query: String,
         val languages: String,
@@ -233,36 +277,44 @@ public sealed interface ProviderWorkerOperation {
     ) : ProviderWorkerOperation
 
     @Serializable
+    @SerialName("SubtitleDownloadLink")
     public data class SubtitleDownloadLink(val fileId: Long) : ProviderWorkerOperation
 
     @Serializable
+    @SerialName("EpisodeWatched")
     public data class EpisodeWatched(
         val mediaRef: MediaRef,
         val episode: Int,
     ) : ProviderWorkerOperation
 
     @Serializable
+    @SerialName("SyncStatus")
     public data class SyncStatus(
         val mediaRef: MediaRef,
         val status: UserMediaStatus,
     ) : ProviderWorkerOperation
 
     @Serializable
+    @SerialName("ImportBackup")
     public data class ImportBackup(val input: ProviderWorkerBlob) : ProviderWorkerOperation
 
     @Serializable
+    @SerialName("ImportPreview")
     public data class ImportPreview(val sampleLines: List<String> = emptyList()) : ProviderWorkerOperation
 
     @Serializable
+    @SerialName("ExecuteAction")
     public data class ExecuteAction(val actionId: String) : ProviderWorkerOperation
 
     @Serializable
+    @SerialName("StreamCanExtract")
     public data class StreamCanExtract(
         val extractorName: String,
         val url: String,
     ) : ProviderWorkerOperation
 
     @Serializable
+    @SerialName("StreamExtract")
     public data class StreamExtract(
         val extractorName: String,
         val url: String,
@@ -273,6 +325,7 @@ public sealed interface ProviderWorkerOperation {
 @Serializable
 public sealed interface ProviderBrokerOperation {
     @Serializable
+    @SerialName("HttpRequest")
     public data class HttpRequest(
         val url: String,
         val method: String,
@@ -281,18 +334,22 @@ public sealed interface ProviderBrokerOperation {
     ) : ProviderBrokerOperation
 
     @Serializable
+    @SerialName("GetSetting")
     public data class GetSetting(val key: String) : ProviderBrokerOperation
 
     @Serializable
+    @SerialName("SetSetting")
     public data class SetSetting(
         val key: String,
         val value: String?,
     ) : ProviderBrokerOperation
 
     @Serializable
+    @SerialName("GetEffectiveMirror")
     public data object GetEffectiveMirror : ProviderBrokerOperation
 
     @Serializable
+    @SerialName("ResolveStream")
     public data class ResolveStream(
         val url: String,
         val referer: String?,
@@ -302,6 +359,7 @@ public sealed interface ProviderBrokerOperation {
 @Serializable
 public sealed interface ProviderBrokerResult {
     @Serializable
+    @SerialName("HttpResponse")
     public data class HttpResponse(
         val statusCode: Int,
         val headers: Map<String, List<String>> = emptyMap(),
@@ -309,18 +367,23 @@ public sealed interface ProviderBrokerResult {
     ) : ProviderBrokerResult
 
     @Serializable
+    @SerialName("Setting")
     public data class Setting(val value: String?) : ProviderBrokerResult
 
     @Serializable
+    @SerialName("Mirror")
     public data class Mirror(val url: String) : ProviderBrokerResult
 
     @Serializable
+    @SerialName("Streams")
     public data class Streams(val values: List<ProviderMediaStream>) : ProviderBrokerResult
 
     @Serializable
+    @SerialName("UnitResult")
     public data object UnitResult : ProviderBrokerResult
 
     @Serializable
+    @SerialName("Failed")
     public data class Failed(
         val code: ProviderWorkerFailureCode,
         val message: String,

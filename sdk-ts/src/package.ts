@@ -22,7 +22,11 @@ export interface ValidationResult {
 export function isSafeEntryName(name: string): boolean {
   if (!name || name.trim() === "") return false;
   if (name.startsWith("/") || name.startsWith("\\")) return false;
+  if (name === "." || name === "..") return false;
   if (name.includes("..")) return false;
+  if (name.includes("//") || name.includes("\\\\")) return false;
+  const parts = name.split(/[/\\]/);
+  if (parts.some((p) => p === "." || p === ".." || p.trim() === "")) return false;
   return /^[a-zA-Z0-9_\-./]+$/.test(name);
 }
 
@@ -87,13 +91,15 @@ export function validateEnvelope(
     // Check for banned binary types in portable zpk/v2
     const lower = entry.name.toLowerCase();
     if (
-      lower.endsWith(".jar") ||
-      lower.endsWith(".dex") ||
-      lower.endsWith(".class") ||
-      lower.endsWith(".so") ||
-      lower.endsWith(".dll") ||
-      lower.endsWith(".dylib") ||
-      lower.endsWith(".exe")
+      manifest.packageFormat === PACKAGE_FORMAT_V2 &&
+      (lower.endsWith(".jar") ||
+        lower.endsWith(".dex") ||
+        lower.endsWith(".class") ||
+        lower.endsWith(".so") ||
+        lower.endsWith(".dll") ||
+        lower.endsWith(".dylib") ||
+        lower.endsWith(".exe") ||
+        lower.endsWith(".apk"))
     ) {
       errors.push(`Forbidden executable binary in portable package: ${entry.name}`);
     }

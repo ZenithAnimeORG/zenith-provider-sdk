@@ -10,6 +10,11 @@ public object ZpkPackageEnvelope {
     public const val MAX_RESOURCE_BYTES: Long = 2L * 1024 * 1024 // 2 MiB
     public const val MAX_ENTRY_COUNT: Int = 100
 
+    public data class ZpkEntry(
+        val name: String,
+        val size: Long,
+    )
+
     public sealed interface ValidationResult {
         public val isValid: Boolean
 
@@ -27,23 +32,42 @@ public object ZpkPackageEnvelope {
     public fun isSafeEntryName(name: String): Boolean {
         if (name.isBlank()) return false
         if (name.startsWith("/") || name.startsWith("\\")) return false
+        if (name == "." || name == "..") return false
         if (name.contains("..")) return false
+        if (name.contains("//") || name.contains("\\\\")) return false
+        val parts = name.split('/', '\\')
+        if (parts.any { it == "." || it == ".." || it.isBlank() }) return false
         return name.matches(Regex("^[a-zA-Z0-9_\\-./]+$"))
     }
 
     public fun validateEnvelope(
         manifest: PluginManifest,
         entries: Map<String, Long>,
+    ): ValidationResult =
+        validateEnvelope(
+            manifest = manifest,
+            entryList = entries.map { (name, size) -> ZpkEntry(name, size) },
+        )
+
+    public fun validateEnvelope(
+        manifest: PluginManifest,
+        entryList: List<ZpkEntry>,
     ): ValidationResult {
         val errors = mutableListOf<String>()
 
-        if (entries.size > MAX_ENTRY_COUNT) {
-            errors.add("Package entry count ${entries.size} exceeds maximum limit of $MAX_ENTRY_COUNT")
+        if (entryList.size > MAX_ENTRY_COUNT) {
+            errors.add("Package entry count ${entryList.size} exceeds maximum limit of $MAX_ENTRY_COUNT")
         }
 
         var totalBytes = 0L
+        val seenNames = mutableSetOf<String>()
 
-        for ((name, size) in entries) {
+        for (entry in entryList) {
+            val (name, size) = entry
+            if (!seenNames.add(name)) {
+                errors.add("Duplicate entry in package: $name")
+            }
+
             if (!isSafeEntryName(name)) {
                 errors.add("Unsafe entry path in package: $name")
             }
@@ -87,13 +111,13 @@ public object ZpkPackageEnvelope {
             errors.add("Total uncompressed size $totalBytes exceeds limit of $MAX_TOTAL_UNCOMPRESSED_BYTES bytes")
         }
 
-        if (!entries.containsKey("manifest.json")) {
+        if (!seenNames.contains("manifest.json")) {
             errors.add("Package envelope is missing required entry: manifest.json")
         }
 
         if (manifest.packageFormat == PACKAGE_FORMAT_V2) {
             val entrypoint = manifest.entrypoint.ifBlank { "index.js" }
-            if (!entries.containsKey(entrypoint)) {
+            if (!seenNames.contains(entrypoint)) {
                 errors.add("Package envelope is missing declared entrypoint: $entrypoint")
             }
         }

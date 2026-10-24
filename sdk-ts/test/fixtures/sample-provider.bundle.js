@@ -1,4 +1,43 @@
-if(typeof globalThis.atob==="undefined"){const b64="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";globalThis.atob=function(s){s=String(s).replace(/=+$/,"");let o="";for(let i=0;i<s.length;){const b0=b64.indexOf(s.charAt(i++)),b1=b64.indexOf(s.charAt(i++)),b2=b64.indexOf(s.charAt(i++)),b3=b64.indexOf(s.charAt(i++));if(b0<0||b1<0)break;o+=String.fromCharCode((b0<<2)|(b1>>4));if(b2>=0)o+=String.fromCharCode(((b1&15)<<4)|(b2>>2));if(b3>=0)o+=String.fromCharCode(((b2&3)<<6)|b3);}return o;};}
+
+if (typeof globalThis !== "undefined") {
+  const b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+  if (typeof globalThis.atob === "undefined") {
+    globalThis.atob = function(input) {
+      const str = String(input ?? "").replace(/[\t\n\f\r ]+/g, "").replace(/=+$/, "");
+      let out = "";
+      for (let i = 0; i < str.length; ) {
+        const b0 = b64.indexOf(str.charAt(i++));
+        const b1 = b64.indexOf(str.charAt(i++));
+        const b2 = b64.indexOf(str.charAt(i++));
+        const b3 = b64.indexOf(str.charAt(i++));
+        if (b0 < 0 || b1 < 0) break;
+        out += String.fromCharCode((b0 << 2) | (b1 >> 4));
+        if (b2 >= 0) out += String.fromCharCode(((b1 & 15) << 4) | (b2 >> 2));
+        if (b3 >= 0) out += String.fromCharCode(((b2 & 3) << 6) | b3);
+      }
+      return out;
+    };
+  }
+  if (typeof globalThis.btoa === "undefined") {
+    globalThis.btoa = function(input) {
+      const str = String(input ?? "");
+      let out = "";
+      for (
+        let block = 0, charCode = 0, idx = 0, map = b64;
+        str.charAt(idx | 0) || ((map = "="), idx % 1);
+        out += map.charAt(63 & (block >> (8 - (idx % 1) * 8)))
+      ) {
+        charCode = str.charCodeAt((idx += 3 / 4));
+        if (charCode > 0xff) {
+          throw new Error("btoa failed: string contains character outside Latin1 range");
+        }
+        block = (block << 8) | charCode;
+      }
+      return out;
+    };
+  }
+}
+
 "use strict";
 (() => {
   var __create = Object.create;
@@ -7,6 +46,7 @@ if(typeof globalThis.atob==="undefined"){const b64="ABCDEFGHIJKLMNOPQRSTUVWXYZab
   var __getOwnPropNames = Object.getOwnPropertyNames;
   var __getProtoOf = Object.getPrototypeOf;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
   var __commonJS = (cb, mod) => function __require() {
     return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
   };
@@ -30,6 +70,7 @@ if(typeof globalThis.atob==="undefined"){const b64="ABCDEFGHIJKLMNOPQRSTUVWXYZab
     isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
     mod
   ));
+  var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
 
   // node_modules/boolbase/index.js
   var require_boolbase = __commonJS({
@@ -54,6 +95,39 @@ if(typeof globalThis.atob==="undefined"){const b64="ABCDEFGHIJKLMNOPQRSTUVWXYZab
       type: "provider",
       definition
     };
+  }
+
+  // src/polyfills.ts
+  if (typeof globalThis !== "undefined") {
+    const b64chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+    if (typeof globalThis.atob === "undefined") {
+      globalThis.atob = function(input) {
+        const str = String(input ?? "").replace(/[\t\n\f\r ]+/g, "").replace(/=+$/, "");
+        if (str.length % 4 === 1) {
+          throw new Error("Invalid character: the string to be decoded is not correctly encoded.");
+        }
+        let output = "";
+        for (let bc = 0, bs = 0, buffer = 0, idx = 0; buffer = b64chars.indexOf(str.charAt(idx++)), ~buffer; output += String.fromCharCode(255 & bs >> (-2 * bc & 6))) {
+          bs = bc % 4 ? bs * 64 + buffer : buffer;
+          if (bc++ % 4 === 0) continue;
+        }
+        return output;
+      };
+    }
+    if (typeof globalThis.btoa === "undefined") {
+      globalThis.btoa = function(input) {
+        const str = String(input ?? "");
+        let output = "";
+        for (let block = 0, charCode = 0, idx = 0, map2 = b64chars; str.charAt(idx | 0) || (map2 = "=", idx % 1); output += map2.charAt(63 & block >> 8 - idx % 1 * 8)) {
+          charCode = str.charCodeAt(idx += 3 / 4);
+          if (charCode > 255) {
+            throw new Error("btoa failed: string contains character outside Latin1 range");
+          }
+          block = block << 8 | charCode;
+        }
+        return output;
+      };
+    }
   }
 
   // node_modules/cheerio/dist/browser/options.js
@@ -6516,42 +6590,43 @@ if(typeof globalThis.atob==="undefined"){const b64="ABCDEFGHIJKLMNOPQRSTUVWXYZab
   var load = getLoad(getParse(parseDocument), esm_default);
 
   // src/dom.ts
-  if (typeof globalThis !== "undefined") {
-    const b64chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
-    if (typeof globalThis.atob === "undefined") {
-      globalThis.atob = function(input) {
-        const str = String(input).replace(/=+$/, "");
-        if (str.length % 4 === 1) {
-          throw new Error("Invalid character: the string to be decoded is not correctly encoded.");
-        }
-        let output = "";
-        for (let bc = 0, bs = 0, buffer = 0, idx = 0; buffer = b64chars.indexOf(str.charAt(idx++)), ~buffer; output += String.fromCharCode(255 & bs >> (-2 * bc & 6))) {
-          bs = bc % 4 ? bs * 64 + buffer : buffer;
-          if (bc++ % 4 === 0) continue;
-        }
-        return output;
-      };
-    }
-    if (typeof globalThis.btoa === "undefined") {
-      globalThis.btoa = function(input) {
-        const str = String(input);
-        let output = "";
-        for (let block = 0, charCode = 0, idx = 0, map2 = b64chars; str.charAt(idx | 0) || (map2 = "=", idx % 1); output += map2.charAt(63 & block >> 8 - idx % 1 * 8)) {
-          charCode = str.charCodeAt(idx += 3 / 4);
-          if (charCode > 255) {
-            throw new Error("btoa failed: string contains character outside Latin1 range");
-          }
-          block = block << 8 | charCode;
-        }
-        return output;
-      };
-    }
-  }
-  function loadHtml(html3) {
-    return load(html3);
+  function loadHtml(html3, options) {
+    return load(html3 ?? "", options);
   }
 
   // src/broker.ts
+  var FetchHeaders = class {
+    constructor(init) {
+      __publicField(this, "map", /* @__PURE__ */ new Map());
+      if (!init) return;
+      for (const [key, val2] of Object.entries(init)) {
+        if (val2 === null || val2 === void 0) continue;
+        const lowerKey = key.toLowerCase();
+        const stringVal = Array.isArray(val2) ? val2.join(", ") : String(val2);
+        this.map.set(lowerKey, stringVal);
+        this[key] = stringVal;
+        this[lowerKey] = stringVal;
+      }
+    }
+    get(name) {
+      return this.map.get(name.toLowerCase()) ?? null;
+    }
+    has(name) {
+      return this.map.has(name.toLowerCase());
+    }
+    forEach(callback) {
+      this.map.forEach((value, key) => callback(value, key));
+    }
+    entries() {
+      return this.map.entries();
+    }
+    keys() {
+      return this.map.keys();
+    }
+    values() {
+      return this.map.values();
+    }
+  };
   var DefaultProviderLogger = class {
     constructor(providerId = "provider") {
       this.providerId = providerId;
@@ -6582,9 +6657,9 @@ if(typeof globalThis.atob==="undefined"){const b64="ABCDEFGHIJKLMNOPQRSTUVWXYZab
     constructor(providerId = "provider", settingsSnapshot = {}) {
       this.providerId = providerId;
       this.settingsSnapshot = settingsSnapshot;
+      __publicField(this, "logger");
       this.logger = new DefaultProviderLogger(providerId);
     }
-    logger;
     /**
      * Performs an HTTP request mediated by the Zenith host Ktor broker.
      * Host enforces redirect domain allowlists, user-agent headers, and body byte quotas.
@@ -6602,7 +6677,7 @@ if(typeof globalThis.atob==="undefined"){const b64="ABCDEFGHIJKLMNOPQRSTUVWXYZab
         const parsed = JSON.parse(responseRaw);
         const status = parsed.statusCode ?? parsed.status ?? 200;
         const body = parsed.body ?? "";
-        const headers = parsed.headers ?? {};
+        const headers = new FetchHeaders(parsed.headers);
         return {
           status,
           statusText: status >= 200 && status < 300 ? "OK" : `Error ${status}`,
@@ -6627,11 +6702,12 @@ if(typeof globalThis.atob==="undefined"){const b64="ABCDEFGHIJKLMNOPQRSTUVWXYZab
         res.headers.forEach((v, k) => {
           headersRecord[k] = v;
         });
+        const headers = new FetchHeaders(headersRecord);
         return {
           status: res.status,
           statusText: res.statusText,
           ok: res.ok,
-          headers: headersRecord,
+          headers,
           async text() {
             return text3;
           },
@@ -6683,6 +6759,29 @@ if(typeof globalThis.atob==="undefined"){const b64="ABCDEFGHIJKLMNOPQRSTUVWXYZab
   };
 
   // src/dispatcher.ts
+  function parseCsvLine(line) {
+    const result = [];
+    let current = "";
+    let inQuotes = false;
+    for (let i = 0; i < line.length; i++) {
+      const char = line[i];
+      if (char === '"') {
+        if (inQuotes && line[i + 1] === '"') {
+          current += '"';
+          i++;
+        } else {
+          inQuotes = !inQuotes;
+        }
+      } else if (char === "," && !inQuotes) {
+        result.push(current.trim());
+        current = "";
+      } else {
+        current += char;
+      }
+    }
+    result.push(current.trim());
+    return result;
+  }
   var MemoryBookmarkSource = class {
     constructor(lines) {
       this.lines = lines;
@@ -6694,11 +6793,11 @@ if(typeof globalThis.atob==="undefined"){const b64="ABCDEFGHIJKLMNOPQRSTUVWXYZab
       if (this.lines.length === 0) return;
       const headerLine = this.lines[0];
       if (!headerLine) return;
-      const headers = headerLine.split(",").map((h) => h.trim().replace(/^"|"$/g, ""));
+      const headers = parseCsvLine(headerLine).map((h) => h.replace(/^"|"$/g, ""));
       for (let i = 1; i < this.lines.length; i++) {
         const line = this.lines[i];
         if (!line || !line.trim()) continue;
-        const values = line.split(",").map((v) => v.trim().replace(/^"|"$/g, ""));
+        const values = parseCsvLine(line).map((v) => v.replace(/^"|"$/g, ""));
         const row = {};
         for (let j = 0; j < headers.length; j++) {
           const h = headers[j];
@@ -6721,7 +6820,7 @@ if(typeof globalThis.atob==="undefined"){const b64="ABCDEFGHIJKLMNOPQRSTUVWXYZab
   async function handleZenithDispatch(requestJson) {
     try {
       const op = JSON.parse(requestJson);
-      const opType = (op.type ?? op.operation ?? "").replace(/^.*[.$]/, "");
+      const opType = (op.kind ?? op.type ?? op.operation ?? "").replace(/^.*[.$]/, "");
       const provider = globalThis.__zenith_provider;
       const importer = globalThis.__zenith_bookmark_importer;
       const context = new ProviderContext(op.providerId ?? "quickjs-provider", op.settings ?? {});
@@ -6729,19 +6828,78 @@ if(typeof globalThis.atob==="undefined"){const b64="ABCDEFGHIJKLMNOPQRSTUVWXYZab
       switch (opType) {
         case "Test": {
           if (!provider?.test) {
-            resultValue = { type: "Test", result: { success: true, message: "Provider ready" } };
+            resultValue = {
+              kind: "Test",
+              type: "Test",
+              result: {
+                kind: "Success",
+                type: "Success",
+                success: true,
+                message: "Provider ready",
+                latencyMs: 0
+              }
+            };
           } else {
             const res = await provider.test(context);
-            resultValue = { type: "Test", result: res };
+            const isSuccess = "success" in res ? res.success : res.type === "Success";
+            const message = "message" in res && res.message ? res.message : "error" in res ? res.error : "OK";
+            const latencyMs = res.latencyMs ?? 0;
+            resultValue = {
+              kind: "Test",
+              type: "Test",
+              result: {
+                kind: isSuccess ? "Success" : "Failure",
+                type: isSuccess ? "Success" : "Failure",
+                success: isSuccess,
+                message,
+                error: isSuccess ? void 0 : message,
+                latencyMs
+              }
+            };
           }
           break;
         }
         case "ProbeStatus": {
           if (!provider?.probeStatus) {
-            resultValue = { type: "Status", result: { isOperational: true, message: "OK" } };
+            resultValue = {
+              kind: "Status",
+              type: "Status",
+              result: {
+                status: "OK",
+                isOperational: true,
+                details: {},
+                latencyMs: null
+              }
+            };
           } else {
             const res = await provider.probeStatus(context);
-            resultValue = { type: "Status", result: res };
+            resultValue = {
+              kind: "Status",
+              type: "Status",
+              result: {
+                status: res.status ?? (res.isOperational ? "OK" : "DEGRADED"),
+                isOperational: res.isOperational ?? res.status === "OK",
+                details: res.details ?? {},
+                latencyMs: res.latencyMs ?? null
+              }
+            };
+          }
+          break;
+        }
+        case "ExecuteAction": {
+          if (!provider?.executeAction) {
+            resultValue = {
+              kind: "ActionResult",
+              type: "ActionResult",
+              result: `Action ${op.actionId ?? ""} is not supported`
+            };
+          } else {
+            const res = await provider.executeAction(op.actionId ?? "", context);
+            resultValue = {
+              kind: "ActionResult",
+              type: "ActionResult",
+              result: res
+            };
           }
           break;
         }
@@ -6755,7 +6913,11 @@ if(typeof globalThis.atob==="undefined"){const b64="ABCDEFGHIJKLMNOPQRSTUVWXYZab
             op.pageSize ?? 20,
             context
           );
-          resultValue = { type: "CatalogSearch", result: searchResult };
+          resultValue = {
+            kind: "CatalogSearch",
+            type: "CatalogSearch",
+            result: searchResult
+          };
           break;
         }
         case "CatalogDetails": {
@@ -6763,96 +6925,264 @@ if(typeof globalThis.atob==="undefined"){const b64="ABCDEFGHIJKLMNOPQRSTUVWXYZab
             throw new Error("Catalog details capability not implemented by provider");
           }
           const details = await provider.getDetails(op.mediaRef, context);
-          resultValue = { type: "CatalogDetails", result: details };
+          resultValue = {
+            kind: "CatalogDetails",
+            type: "CatalogDetails",
+            result: details
+          };
           break;
         }
         case "CatalogHomeSections": {
           if (!provider?.getHomeSections) {
-            resultValue = { type: "CatalogSections", result: [] };
+            resultValue = { kind: "CatalogSections", type: "CatalogSections", result: [] };
           } else {
             const sections = await provider.getHomeSections(context);
-            resultValue = { type: "CatalogSections", result: sections };
+            resultValue = {
+              kind: "CatalogSections",
+              type: "CatalogSections",
+              result: sections
+            };
+          }
+          break;
+        }
+        case "CatalogRelated": {
+          if (!provider?.getRelated) {
+            resultValue = { kind: "CatalogItems", type: "CatalogItems", result: [] };
+          } else {
+            const items = await provider.getRelated(op.mediaRef, context);
+            resultValue = {
+              kind: "CatalogItems",
+              type: "CatalogItems",
+              result: items
+            };
           }
           break;
         }
         case "CatalogPopular": {
           if (!provider?.getPopular) {
-            resultValue = { type: "CatalogItems", result: [] };
+            resultValue = { kind: "CatalogItems", type: "CatalogItems", result: [] };
           } else {
             const items = await provider.getPopular(op.page ?? 1, op.pageSize ?? 20, context);
-            resultValue = { type: "CatalogItems", result: items };
+            resultValue = {
+              kind: "CatalogItems",
+              type: "CatalogItems",
+              result: items
+            };
           }
           break;
         }
         case "CatalogLatest": {
           if (!provider?.getLatest) {
-            resultValue = { type: "CatalogItems", result: [] };
+            resultValue = { kind: "CatalogItems", type: "CatalogItems", result: [] };
           } else {
             const items = await provider.getLatest(op.page ?? 1, op.pageSize ?? 20, context);
-            resultValue = { type: "CatalogItems", result: items };
+            resultValue = {
+              kind: "CatalogItems",
+              type: "CatalogItems",
+              result: items
+            };
           }
           break;
         }
         case "MediaSources": {
           if (!provider?.getSources) {
-            resultValue = { type: "VideoSources", result: [] };
+            resultValue = { kind: "VideoSources", type: "VideoSources", result: [] };
           } else {
-            const sources = await provider.getSources(op.mediaRef, op.episodeNumber ?? 1, context);
-            resultValue = { type: "VideoSources", result: sources };
+            const sources = await provider.getSources(op.mediaRef, context, op.episodeNumber);
+            resultValue = {
+              kind: "VideoSources",
+              type: "VideoSources",
+              result: sources
+            };
           }
           break;
         }
+        case "ResolveEpisode": {
+          if (provider?.resolveEpisode) {
+            const streams = await provider.resolveEpisode(op.episode, context);
+            resultValue = {
+              kind: "MediaStreams",
+              type: "MediaStreams",
+              result: streams
+            };
+          } else if (provider?.resolveStream) {
+            const streams = await provider.resolveStream(
+              op.episode?.providerId ?? "default",
+              op.episode?.url ?? "",
+              context
+            );
+            resultValue = {
+              kind: "MediaStreams",
+              type: "MediaStreams",
+              result: streams
+            };
+          } else {
+            const url = op.episode?.url ?? "";
+            const isHls = url.includes(".m3u8");
+            const defaultStream = url ? [{ url, quality: "Auto", isHls }] : [];
+            resultValue = {
+              kind: "MediaStreams",
+              type: "MediaStreams",
+              result: defaultStream
+            };
+          }
+          break;
+        }
+        case "TorrentSearch":
         case "TorrentSources": {
-          if (!provider?.getTorrentSources) {
-            resultValue = { type: "TorrentSources", result: [] };
+          const fn = provider?.searchTorrents ?? provider?.getTorrentSources;
+          if (!fn) {
+            resultValue = { kind: "TorrentSources", type: "TorrentSources", result: [] };
           } else {
-            const torrents = await provider.getTorrentSources(op.mediaRef, op.episodeNumber ?? 1, context);
-            resultValue = { type: "TorrentSources", result: torrents };
+            const torrents = await (provider?.searchTorrents ? provider.searchTorrents(op.mediaRef, context) : provider.getTorrentSources(op.mediaRef, op.episodeNumber ?? 1, context));
+            resultValue = {
+              kind: "TorrentSources",
+              type: "TorrentSources",
+              result: torrents
+            };
           }
           break;
         }
+        case "SubtitleSearch":
         case "Subtitles": {
-          if (!provider?.getSubtitles) {
-            resultValue = { type: "Subtitles", result: [] };
-          } else {
+          if (provider?.searchSubtitles) {
+            const subs = await provider.searchSubtitles(
+              op.query ?? op.mediaRef?.title ?? "",
+              op.languages ?? "ru,en",
+              op.episodeNumber ?? null,
+              op.seasonNumber ?? null,
+              context
+            );
+            resultValue = {
+              kind: "Subtitles",
+              type: "Subtitles",
+              result: subs
+            };
+          } else if (provider?.getSubtitles) {
             const subs = await provider.getSubtitles(op.mediaRef, op.episodeNumber ?? 1, context);
-            resultValue = { type: "Subtitles", result: subs };
+            resultValue = {
+              kind: "Subtitles",
+              type: "Subtitles",
+              result: subs
+            };
+          } else {
+            resultValue = { kind: "Subtitles", type: "Subtitles", result: [] };
           }
           break;
         }
-        case "SkipTimings": {
-          if (!provider?.getSkipTimings) {
-            resultValue = { type: "SkipTimes", result: [] };
+        case "SubtitleDownloadLink": {
+          if (!provider?.getSubtitleDownloadLink) {
+            resultValue = { kind: "DownloadLink", type: "DownloadLink", url: null };
           } else {
+            const link = await provider.getSubtitleDownloadLink(op.fileId ?? 0, context);
+            resultValue = {
+              kind: "DownloadLink",
+              type: "DownloadLink",
+              url: link
+            };
+          }
+          break;
+        }
+        case "SkipTimes":
+        case "SkipTimings": {
+          if (provider?.getSkipTimes) {
+            const timings = await provider.getSkipTimes(
+              op.mediaRef,
+              op.episodeNumber ?? 1,
+              op.episodeLength ?? null,
+              op.translationName ?? null,
+              context
+            );
+            resultValue = {
+              kind: "SkipTimes",
+              type: "SkipTimes",
+              result: timings
+            };
+          } else if (provider?.getSkipTimings) {
             const timings = await provider.getSkipTimings(op.mediaRef, op.episodeNumber ?? 1, context);
-            resultValue = { type: "SkipTimes", result: timings };
+            resultValue = {
+              kind: "SkipTimes",
+              type: "SkipTimes",
+              result: timings
+            };
+          } else {
+            resultValue = { kind: "SkipTimes", type: "SkipTimes", result: [] };
           }
           break;
         }
         case "Poster": {
           if (!provider?.getPoster) {
-            resultValue = { type: "Poster", url: null };
+            resultValue = { kind: "Poster", type: "Poster", url: null };
           } else {
             const posterUrl = await provider.getPoster(op.mediaRef, context);
-            resultValue = { type: "Poster", url: posterUrl };
+            resultValue = {
+              kind: "Poster",
+              type: "Poster",
+              url: posterUrl
+            };
           }
           break;
         }
-        case "ResolveStream": {
-          if (!provider?.resolveStream) {
-            resultValue = { type: "MediaStreams", result: [] };
+        case "StreamCanExtract": {
+          if (!provider?.canExtractStream) {
+            resultValue = { kind: "BooleanResult", type: "BooleanResult", value: false };
           } else {
-            const streams = await provider.resolveStream(op.extractorName, op.url, context);
-            resultValue = { type: "MediaStreams", result: streams };
+            const canExtract = await provider.canExtractStream(op.extractorName, op.url, context);
+            resultValue = {
+              kind: "BooleanResult",
+              type: "BooleanResult",
+              value: canExtract
+            };
           }
           break;
         }
+        case "StreamExtract":
+        case "ResolveStream": {
+          if (provider?.extractStream) {
+            const streams = await provider.extractStream(
+              op.extractorName,
+              op.url,
+              op.referer ?? null,
+              context
+            );
+            resultValue = {
+              kind: "MediaStreams",
+              type: "MediaStreams",
+              result: streams
+            };
+          } else if (provider?.resolveStream) {
+            const streams = await provider.resolveStream(op.extractorName, op.url, context);
+            resultValue = {
+              kind: "MediaStreams",
+              type: "MediaStreams",
+              result: streams
+            };
+          } else {
+            resultValue = { kind: "MediaStreams", type: "MediaStreams", result: [] };
+          }
+          break;
+        }
+        case "EpisodeWatched": {
+          if (provider?.onEpisodeWatched) {
+            await provider.onEpisodeWatched(op.mediaRef, op.episode ?? 1, context);
+          }
+          resultValue = { kind: "UnitResult", type: "UnitResult" };
+          break;
+        }
+        case "SyncStatus": {
+          if (provider?.syncStatus) {
+            await provider.syncStatus(op.mediaRef, op.status, context);
+          }
+          resultValue = { kind: "UnitResult", type: "UnitResult" };
+          break;
+        }
+        // Legacy tracker operation aliases
         case "UserStatus": {
           if (!provider?.getUserMediaStatus) {
             throw new Error("Tracker getUserMediaStatus not implemented");
           }
           const status = await provider.getUserMediaStatus(op.mediaRef, context);
-          resultValue = { type: "UserStatus", result: status };
+          resultValue = { kind: "UserStatus", type: "UserStatus", result: status };
           break;
         }
         case "UpdateUserStatus": {
@@ -6860,7 +7190,7 @@ if(typeof globalThis.atob==="undefined"){const b64="ABCDEFGHIJKLMNOPQRSTUVWXYZab
             throw new Error("Tracker updateUserMediaStatus not implemented");
           }
           await provider.updateUserMediaStatus(op.mediaRef, op.status, op.progress ?? 0, context);
-          resultValue = { type: "UnitResult" };
+          resultValue = { kind: "UnitResult", type: "UnitResult" };
           break;
         }
         case "ImportPreview": {
@@ -6873,14 +7203,19 @@ if(typeof globalThis.atob==="undefined"){const b64="ABCDEFGHIJKLMNOPQRSTUVWXYZab
             logger: context.logger
           };
           const previewResult = await importer.preview(source, importCtx);
-          resultValue = { type: "ImportPreviewResult", result: previewResult };
+          resultValue = {
+            kind: "ImportPreview",
+            type: "ImportPreviewResult",
+            result: previewResult
+          };
           break;
         }
+        case "ImportBackup":
         case "ImportReadBatch": {
           if (!importer?.readBookmarks) {
             throw new Error("Bookmark importer readBookmarks not implemented");
           }
-          const source = new MemoryBookmarkSource(op.lines ?? []);
+          const source = new MemoryBookmarkSource(op.lines ?? op.sampleLines ?? []);
           const importCtx = {
             bookmark: (c) => c,
             logger: context.logger
@@ -6895,6 +7230,7 @@ if(typeof globalThis.atob==="undefined"){const b64="ABCDEFGHIJKLMNOPQRSTUVWXYZab
             entries.push(...await raw);
           }
           resultValue = {
+            kind: "ImportData",
             type: "ImportData",
             result: { sourceName: op.providerId ?? "importer", entries }
           };
@@ -6904,12 +7240,14 @@ if(typeof globalThis.atob==="undefined"){const b64="ABCDEFGHIJKLMNOPQRSTUVWXYZab
           throw new Error(`Unsupported operation type: ${opType}`);
       }
       const response = {
+        kind: "Success",
         type: "Success",
         value: resultValue
       };
       return JSON.stringify(response);
     } catch (err) {
       const response = {
+        kind: "Failed",
         type: "Failed",
         code: "PROVIDER_FAILURE",
         message: err instanceof Error ? err.message : String(err)
@@ -6944,6 +7282,35 @@ if(typeof globalThis.atob==="undefined"){const b64="ABCDEFGHIJKLMNOPQRSTUVWXYZab
         items,
         hasNextPage: false
       };
+    },
+    async resolveEpisode(episode, context) {
+      const url = episode.url || "https://stream.example.com/master.m3u8";
+      return [
+        {
+          url,
+          quality: "1080p",
+          isHls: true
+        }
+      ];
+    },
+    async searchTorrents(mediaRef, context) {
+      return [
+        {
+          title: `${mediaRef.title} [1080p Web-DL]`,
+          magnetUri: "magnet:?xt=urn:btih:0123456789abcdef0123456789abcdef01234567",
+          seeders: 120,
+          leechers: 8
+        }
+      ];
+    },
+    async getSkipTimes(mediaRef, episodeNumber, episodeLength, translationName, context) {
+      return [
+        {
+          startTime: 90,
+          endTime: 180,
+          skipType: "op"
+        }
+      ];
     }
   });
 })();

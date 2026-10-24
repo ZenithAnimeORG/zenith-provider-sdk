@@ -1,16 +1,19 @@
 package com.pilldev.zenith.provider.model
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 public sealed interface ProviderTestResult {
     @Serializable
+    @SerialName("Success")
     public data class Success(
         val message: String,
         val latencyMs: Long = 0L,
     ) : ProviderTestResult
 
     @Serializable
+    @SerialName("Failure")
     public data class Failure(
         val error: String,
         val message: String? = null,
