@@ -8,7 +8,7 @@
 
 > **loadHtml**(`html`, `options?`): `CheerioAPI`
 
-Defined in: [dom.ts:59](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/dom.ts#L59)
+Defined in: [dom.ts:59](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/dom.ts#L59)
 
 Loads an HTML document string into a Cheerio DOM querying instance.
 

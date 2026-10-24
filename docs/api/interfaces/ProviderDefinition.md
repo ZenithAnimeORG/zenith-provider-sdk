@@ -6,7 +6,7 @@
 
 # Interface: ProviderDefinition
 
-Defined in: [provider.ts:45](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/provider.ts#L45)
+Defined in: [provider.ts:45](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/provider.ts#L45)
 
 Interface implemented by Zenith modular providers.
 
@@ -32,7 +32,7 @@ are available to all providers regardless of declared capabilities.
 
 > `optional` **canExtractStream**(`extractorName`, `url`, `context`): `Promise`\<`boolean`\>
 
-Defined in: [provider.ts:490](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/provider.ts#L490)
+Defined in: [provider.ts:490](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/provider.ts#L490)
 
 Checks whether this provider can extract streams from a video hosting embed URL.
 
@@ -56,7 +56,7 @@ Checks whether this provider can extract streams from a video hosting embed URL.
 
 > `optional` **dispose**(): `Promise`\<`void`\>
 
-Defined in: [provider.ts:77](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/provider.ts#L77)
+Defined in: [provider.ts:77](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/provider.ts#L77)
 
 Cleans up provider resources when unloaded or replaced.
 
@@ -78,7 +78,7 @@ async dispose() {
 
 > `optional` **executeAction**(`actionId`, `context`): `Promise`\<`string`\>
 
-Defined in: [provider.ts:139](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/provider.ts#L139)
+Defined in: [provider.ts:139](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/provider.ts#L139)
 
 Executes a custom interactive action triggered from Zenith provider settings UI.
 
@@ -113,7 +113,7 @@ async executeAction(actionId, context) {
 
 > `optional` **extractStream**(`extractorName`, `url`, `referer`, `context`): `Promise`\<[`ProviderMediaStream`](ProviderMediaStream.md)[]\>
 
-Defined in: [provider.ts:505](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/provider.ts#L505)
+Defined in: [provider.ts:505](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/provider.ts#L505)
 
 Extracts playable video streams from a video hosting embed URL.
 
@@ -138,7 +138,7 @@ Array of extracted media streams.
 
 > `optional` **getDetails**(`mediaRef`, `context`): `Promise`\<[`CatalogMediaDetails`](CatalogMediaDetails.md)\>
 
-Defined in: [provider.ts:201](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/provider.ts#L201)
+Defined in: [provider.ts:201](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/provider.ts#L201)
 
 Loads full metadata for a specific title.
 
@@ -178,7 +178,7 @@ async getDetails(mediaRef, context) {
 
 > `optional` **getEpisodes**(`mediaRef`, `context`): `Promise`\<[`ProviderEpisode`](ProviderEpisode.md)[]\>
 
-Defined in: [provider.ts:257](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/provider.ts#L257)
+Defined in: [provider.ts:257](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/provider.ts#L257)
 
 Retrieves the raw list of episodes for a given title directly without grouping into sources.
 
@@ -201,7 +201,7 @@ Array of provider episodes.
 
 > `optional` **getHomeSections**(`context`): `Promise`\<[`CatalogSection`](CatalogSection.md)[]\>
 
-Defined in: [provider.ts:219](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/provider.ts#L219)
+Defined in: [provider.ts:219](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/provider.ts#L219)
 
 Loads curated horizontal sections/carousels for the Zenith Home screen.
 
@@ -234,7 +234,7 @@ async getHomeSections(context) {
 
 > `optional` **getLatest**(`page`, `pageSize`, `context`): `Promise`\<[`CatalogMediaItem`](CatalogMediaItem.md)[]\>
 
-Defined in: [provider.ts:239](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/provider.ts#L239)
+Defined in: [provider.ts:239](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/provider.ts#L239)
 
 Loads a paginated list of newly released or updated media items.
 
@@ -258,7 +258,7 @@ Array of catalog media items.
 
 > `optional` **getPopular**(`page`, `pageSize`, `context`): `Promise`\<[`CatalogMediaItem`](CatalogMediaItem.md)[]\>
 
-Defined in: [provider.ts:229](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/provider.ts#L229)
+Defined in: [provider.ts:229](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/provider.ts#L229)
 
 Loads a paginated list of currently popular media items.
 
@@ -282,7 +282,7 @@ Array of catalog media items.
 
 > `optional` **getPoster**(`mediaRef`, `context`): `Promise`\<`string` \| `null`\>
 
-Defined in: [provider.ts:476](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/provider.ts#L476)
+Defined in: [provider.ts:476](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/provider.ts#L476)
 
 Resolves a high-resolution poster artwork URL for a media item.
 
@@ -305,7 +305,7 @@ Poster image URL or `null`.
 
 > `optional` **getRelated**(`mediaRef`, `context`): `Promise`\<[`CatalogMediaItem`](CatalogMediaItem.md)[]\>
 
-Defined in: [provider.ts:248](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/provider.ts#L248)
+Defined in: [provider.ts:248](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/provider.ts#L248)
 
 Loads related or recommended titles for a given media item.
 
@@ -328,7 +328,7 @@ Array of recommended media items.
 
 > `optional` **getSearch**(`query`, `page`, `pageSize`, `context`): `Promise`\<[`CatalogSearchResult`](CatalogSearchResult.md)\>
 
-Defined in: [provider.ts:171](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/provider.ts#L171)
+Defined in: [provider.ts:171](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/provider.ts#L171)
 
 Searches the provider's media catalog by query string.
 
@@ -371,7 +371,7 @@ async getSearch(query, page, pageSize, context) {
 
 > `optional` **getSkipTimes**(`mediaRef`, `episodeNumber`, `episodeLength`, `translationName`, `context`): `Promise`\<[`SkipInterval`](SkipInterval.md)[]\>
 
-Defined in: [provider.ts:443](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/provider.ts#L443)
+Defined in: [provider.ts:443](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/provider.ts#L443)
 
 Retrieves intro/outro skip intervals for an episode.
 
@@ -409,7 +409,7 @@ async getSkipTimes(mediaRef, episodeNumber, episodeLength, translationName, cont
 
 > `optional` **getSkipTimings**(`mediaRef`, `episodeNumber`, `context`): `Promise`\<[`SkipInterval`](SkipInterval.md)[]\>
 
-Defined in: [provider.ts:459](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/provider.ts#L459)
+Defined in: [provider.ts:459](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/provider.ts#L459)
 
 Simplified overload for skip intervals.
 
@@ -433,7 +433,7 @@ Array of skip intervals.
 
 > `optional` **getSources**(`mediaRef`, `context`, `episodeNumber?`): `Promise`\<[`ProviderVideoSource`](ProviderVideoSource.md)[]\>
 
-Defined in: [provider.ts:285](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/provider.ts#L285)
+Defined in: [provider.ts:285](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/provider.ts#L285)
 
 Retrieves available video translation sources (dubbing groups, audio tracks, sub groups) and their episodes.
 
@@ -472,7 +472,7 @@ async getSources(mediaRef, context) {
 
 > `optional` **getSubtitleDownloadLink**(`fileId`, `context`): `Promise`\<`string` \| `null`\>
 
-Defined in: [provider.ts:399](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/provider.ts#L399)
+Defined in: [provider.ts:399](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/provider.ts#L399)
 
 Resolves the direct download URL for a subtitle file ID.
 
@@ -495,7 +495,7 @@ Download URL or `null` if expired/unavailable.
 
 > `optional` **getSubtitles**(`mediaRef`, `episodeNumber`, `context`): `Promise`\<[`ProviderSubtitle`](ProviderSubtitle.md)[]\>
 
-Defined in: [provider.ts:412](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/provider.ts#L412)
+Defined in: [provider.ts:412](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/provider.ts#L412)
 
 Retrieves subtitles for a specific media item and episode.
 
@@ -519,7 +519,7 @@ Array of subtitle tracks.
 
 > `optional` **getTorrentSources**(`mediaRef`, `episodeNumber`, `context`): `Promise`\<[`ProviderTorrentSource`](ProviderTorrentSource.md)[]\>
 
-Defined in: [provider.ts:353](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/provider.ts#L353)
+Defined in: [provider.ts:353](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/provider.ts#L353)
 
 Retrieves torrent releases filtered for a specific episode number.
 
@@ -543,7 +543,7 @@ Array of matching torrent releases.
 
 > `optional` **getUserMediaStatus**(`mediaRef`, `context`): `Promise`\<[`UserMediaStatus`](../type-aliases/UserMediaStatus.md)\>
 
-Defined in: [provider.ts:563](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/provider.ts#L563)
+Defined in: [provider.ts:563](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/provider.ts#L563)
 
 Retrieves the current user tracking status for a media item.
 
@@ -566,7 +566,7 @@ User media status.
 
 > `optional` **initialize**(`manifest`, `context`): `Promise`\<`void`\>
 
-Defined in: [provider.ts:65](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/provider.ts#L65)
+Defined in: [provider.ts:65](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/provider.ts#L65)
 
 Initializes the provider when the QuickJS instance is spun up.
 
@@ -597,7 +597,7 @@ async initialize(manifest, context) {
 
 > `optional` **onEpisodeWatched**(`mediaRef`, `episode`, `context`): `Promise`\<`void`\>
 
-Defined in: [provider.ts:537](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/provider.ts#L537)
+Defined in: [provider.ts:537](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/provider.ts#L537)
 
 Invoked when an episode has been watched in Zenith.
 
@@ -619,7 +619,7 @@ Invoked when an episode has been watched in Zenith.
 
 > `optional` **probeStatus**(`context`): `Promise`\<[`ProviderStatusInfo`](ProviderStatusInfo.md)\>
 
-Defined in: [provider.ts:119](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/provider.ts#L119)
+Defined in: [provider.ts:119](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/provider.ts#L119)
 
 Probes provider operational health and response latency.
 
@@ -655,7 +655,7 @@ async probeStatus(context) {
 
 > `optional` **resolveEpisode**(`episode`, `context`): `Promise`\<[`ProviderMediaStream`](ProviderMediaStream.md)[]\>
 
-Defined in: [provider.ts:310](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/provider.ts#L310)
+Defined in: [provider.ts:310](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/provider.ts#L310)
 
 Resolves direct playable video streams (HLS m3u8 or MP4) for an episode.
 
@@ -691,7 +691,7 @@ async resolveEpisode(episode, context) {
 
 > `optional` **resolveStream**(`extractorName`, `url`, `context`): `Promise`\<[`ProviderMediaStream`](ProviderMediaStream.md)[]\>
 
-Defined in: [provider.ts:520](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/provider.ts#L520)
+Defined in: [provider.ts:520](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/provider.ts#L520)
 
 Resolves streams using a registered extractor.
 
@@ -715,7 +715,7 @@ Array of extracted media streams.
 
 > `optional` **searchSubtitles**(`query`, `languages`, `episodeNumber`, `seasonNumber`, `context`): `Promise`\<[`ProviderSubtitle`](ProviderSubtitle.md)[]\>
 
-Defined in: [provider.ts:384](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/provider.ts#L384)
+Defined in: [provider.ts:384](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/provider.ts#L384)
 
 Searches for subtitle tracks matching a title or episode.
 
@@ -753,7 +753,7 @@ async searchSubtitles(query, languages, episodeNumber, seasonNumber, context) {
 
 > `optional` **searchTorrents**(`mediaRef`, `context`): `Promise`\<[`ProviderTorrentSource`](ProviderTorrentSource.md)[]\>
 
-Defined in: [provider.ts:340](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/provider.ts#L340)
+Defined in: [provider.ts:340](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/provider.ts#L340)
 
 Searches for BitTorrent releases matching a title.
 
@@ -791,7 +791,7 @@ async searchTorrents(mediaRef, context) {
 
 > `optional` **syncStatus**(`mediaRef`, `status`, `context`): `Promise`\<`void`\>
 
-Defined in: [provider.ts:550](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/provider.ts#L550)
+Defined in: [provider.ts:550](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/provider.ts#L550)
 
 Synchronizes user watch status to the tracking service.
 
@@ -813,7 +813,7 @@ Synchronizes user watch status to the tracking service.
 
 > `optional` **test**(`context`): `Promise`\<[`ProviderTestResult`](../type-aliases/ProviderTestResult.md)\>
 
-Defined in: [provider.ts:98](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/provider.ts#L98)
+Defined in: [provider.ts:98](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/provider.ts#L98)
 
 Performs a self-test diagnostic check to verify API connectivity and server health.
 
@@ -849,7 +849,7 @@ async test(context) {
 
 > `optional` **updateUserMediaStatus**(`mediaRef`, `status`, `progress`, `context`): `Promise`\<`void`\>
 
-Defined in: [provider.ts:573](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/provider.ts#L573)
+Defined in: [provider.ts:573](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/provider.ts#L573)
 
 Updates user watch status and episode progress.
 

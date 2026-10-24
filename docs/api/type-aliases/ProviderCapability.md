@@ -8,7 +8,7 @@
 
 > **ProviderCapability** = `"MEDIA_SOURCE"` \| `"POSTER_SOURCE"` \| `"SKIP_TIMINGS"` \| `"SUBTITLES"` \| `"TORRENT_SOURCE"` \| `"STREAM_EXTRACTOR"` \| `"CATALOG"` \| `"TRACKER"` \| `"IMPORT"` \| `"UNKNOWN"`
 
-Defined in: [models.ts:27](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/models.ts#L27)
+Defined in: [models.ts:27](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/models.ts#L27)
 
 Declares the capabilities supported by a Zenith provider plugin.
 

@@ -8,7 +8,7 @@
 
 > **isSafeEntryName**(`name`): `boolean`
 
-Defined in: [package.ts:103](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/package.ts#L103)
+Defined in: [package.ts:103](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/package.ts#L103)
 
 Checks whether an entry filename is safe and free of directory traversal vulnerabilities.
 

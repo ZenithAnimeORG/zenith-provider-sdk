@@ -6,7 +6,7 @@
 
 # Interface: ImportBatch
 
-Defined in: [models.ts:707](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/models.ts#L707)
+Defined in: [models.ts:707](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/models.ts#L707)
 
 Batch of bookmark entries imported from a named source.
 
@@ -14,5 +14,5 @@ Batch of bookmark entries imported from a named source.
 
 | Property | Type | Description | Defined in |
 | ------ | ------ | ------ | ------ |
-| <a id="entries"></a> `entries` | [`RawImportEntry`](RawImportEntry.md)[] | Extracted bookmark items. | [models.ts:716](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/models.ts#L716) |
-| <a id="sourcename"></a> `sourceName` | `string` | Source service name (e.g. `"MyAnimeList"`, `"Shikimori"`, `"AniList"`). | [models.ts:711](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/models.ts#L711) |
+| <a id="entries"></a> `entries` | [`RawImportEntry`](RawImportEntry.md)[] | Extracted bookmark items. | [models.ts:716](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/models.ts#L716) |
+| <a id="sourcename"></a> `sourceName` | `string` | Source service name (e.g. `"MyAnimeList"`, `"Shikimori"`, `"AniList"`). | [models.ts:711](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/models.ts#L711) |

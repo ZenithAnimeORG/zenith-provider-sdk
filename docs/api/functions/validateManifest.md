@@ -8,7 +8,7 @@
 
 > **validateManifest**(`manifest`): [`ValidationResult`](../interfaces/ValidationResult.md)
 
-Defined in: [package.ts:138](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/package.ts#L138)
+Defined in: [package.ts:138](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/package.ts#L138)
 
 Validates a parsed `manifest.json` against Zenith Manifest V2 rules.
 

@@ -27,7 +27,7 @@
 
 ### `getSearch(query, page, pageSize, context)`
 
-Вызывается при вводе запроса в строке поиска. Возвращает массив карточек {@link CatalogMediaItem} и флаг наличия следующей страницы.
+Вызывается при вводе запроса в строке поиска. Возвращает массив карточек [`CatalogMediaItem`](/api/interfaces/CatalogMediaItem) и флаг наличия следующей страницы.
 
 ```ts
 async getSearch(query, page, pageSize, context) {
@@ -59,7 +59,7 @@ async getSearch(query, page, pageSize, context) {
 
 ### `getDetails(mediaRef, context)`
 
-Вызывается при открытии экрана тайтла. Возвращает объект {@link CatalogMediaDetails}.
+Вызывается при открытии экрана тайтла. Возвращает объект [`CatalogMediaDetails`](/api/interfaces/CatalogMediaDetails).
 
 ```ts
 async getDetails(mediaRef, context) {
@@ -92,7 +92,7 @@ async getDetails(mediaRef, context) {
 
 ### `getSources(mediaRef, context, episodeNumber?)`
 
-Возвращает массив групп переводов {@link ProviderVideoSource}, каждая из которых содержит свой список серий.
+Возвращает массив групп переводов [`ProviderVideoSource`](/api/interfaces/ProviderVideoSource), каждая из которых содержит свой список серий.
 
 ```ts
 async getSources(mediaRef, context) {
@@ -120,7 +120,7 @@ async getSources(mediaRef, context) {
 
 ### `resolveEpisode(episode, context)`
 
-Преобразует выбранную серию в массив доступных потоков {@link ProviderMediaStream}.
+Преобразует выбранную серию в массив доступных потоков [`ProviderMediaStream`](/api/interfaces/ProviderMediaStream).
 
 ```ts
 async resolveEpisode(episode, context) {
@@ -149,7 +149,7 @@ Zenith включает встроенный движок стриминга т�
 
 ### `searchTorrents(mediaRef, context)`
 
-Возвращает массив найденных раздач {@link ProviderTorrentSource}.
+Возвращает массив найденных раздач [`ProviderTorrentSource`](/api/interfaces/ProviderTorrentSource).
 
 ```ts
 async searchTorrents(mediaRef, context) {
@@ -214,7 +214,7 @@ async searchSubtitles(query, languages, episodeNumber, seasonNumber, context) {
 
 ### `getSkipTimes(mediaRef, episodeNumber, episodeLength, translationName, context)`
 
-Возвращает интервалы {@link SkipInterval} в секундах:
+Возвращает интервалы [`SkipInterval`](/api/interfaces/SkipInterval) в секундах:
 
 ```ts
 async getSkipTimes(mediaRef, episodeNumber, episodeLength, translationName, context) {

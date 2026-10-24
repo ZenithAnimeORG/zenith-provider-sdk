@@ -8,7 +8,7 @@
 
 > **ProviderTranslationType** = `"DUB"` \| `"VO"` \| `"SUB"` \| `"UNKNOWN"`
 
-Defined in: [models.ts:47](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/models.ts#L47)
+Defined in: [models.ts:47](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/models.ts#L47)
 
 Type of audio/text translation provided by a video source.
 

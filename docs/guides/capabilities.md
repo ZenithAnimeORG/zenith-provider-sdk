@@ -27,7 +27,7 @@ The Catalog capability powers the search bar, discovery tabs, and title details 
 
 ### `getSearch(query, page, pageSize, context)`
 
-Invoked when the user types in the search bar. Returns a list of {@link CatalogMediaItem} cards and pagination flags.
+Invoked when the user types in the search bar. Returns a list of [`CatalogMediaItem`](/api/interfaces/CatalogMediaItem) cards and pagination flags.
 
 ```ts
 async getSearch(query, page, pageSize, context) {
@@ -59,7 +59,7 @@ async getSearch(query, page, pageSize, context) {
 
 ### `getDetails(mediaRef, context)`
 
-Invoked when the user taps on a title to open its full details page. Returns {@link CatalogMediaDetails}.
+Invoked when the user taps on a title to open its full details page. Returns [`CatalogMediaDetails`](/api/interfaces/CatalogMediaDetails).
 
 ```ts
 async getDetails(mediaRef, context) {
@@ -92,7 +92,7 @@ The Media Source capability powers video playback. It provides translation track
 
 ### `getSources(mediaRef, context, episodeNumber?)`
 
-Returns an array of {@link ProviderVideoSource} groups, each containing its episode list.
+Returns an array of [`ProviderVideoSource`](/api/interfaces/ProviderVideoSource) groups, each containing its episode list.
 
 ```ts
 async getSources(mediaRef, context) {
@@ -120,7 +120,7 @@ async getSources(mediaRef, context) {
 
 ### `resolveEpisode(episode, context)`
 
-Resolves the chosen episode into playable {@link ProviderMediaStream} instances.
+Resolves the chosen episode into playable [`ProviderMediaStream`](/api/interfaces/ProviderMediaStream) instances.
 
 ```ts
 async resolveEpisode(episode, context) {
@@ -150,7 +150,7 @@ Zenith includes an embedded BitTorrent streaming engine powered by `jlibtorrent`
 
 ### `searchTorrents(mediaRef, context)`
 
-Returns an array of {@link ProviderTorrentSource} items.
+Returns an array of [`ProviderTorrentSource`](/api/interfaces/ProviderTorrentSource) items.
 
 ```ts
 async searchTorrents(mediaRef, context) {
@@ -215,7 +215,7 @@ Enables automatic or manual "Skip Intro" / "Skip Outro" buttons in the Zenith vi
 
 ### `getSkipTimes(mediaRef, episodeNumber, episodeLength, translationName, context)`
 
-Returns {@link SkipInterval} segments in seconds:
+Returns [`SkipInterval`](/api/interfaces/SkipInterval) segments in seconds:
 
 ```ts
 async getSkipTimes(mediaRef, episodeNumber, episodeLength, translationName, context) {

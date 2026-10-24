@@ -6,7 +6,7 @@
 
 # Class: ProviderContext
 
-Defined in: [broker.ts:282](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/broker.ts#L282)
+Defined in: [broker.ts:282](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/broker.ts#L282)
 
 Host-mediated provider execution context passed to all [ProviderDefinition](../interfaces/ProviderDefinition.md) methods.
 
@@ -28,7 +28,7 @@ const html = await response.text();
 
 > **new ProviderContext**(`providerId?`, `settingsSnapshot?`): `ProviderContext`
 
-Defined in: [broker.ts:294](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/broker.ts#L294)
+Defined in: [broker.ts:294](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/broker.ts#L294)
 
 Constructs a new ProviderContext.
 
@@ -47,8 +47,8 @@ Constructs a new ProviderContext.
 
 | Property | Modifier | Type | Default value | Description | Defined in |
 | ------ | ------ | ------ | ------ | ------ | ------ |
-| <a id="logger"></a> `logger` | `readonly` | [`ProviderLogger`](../interfaces/ProviderLogger.md) | `undefined` | Structured logger writing into Zenith's Kermit logging engine. | [broker.ts:286](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/broker.ts#L286) |
-| <a id="providerid"></a> `providerId` | `readonly` | `string` | `"provider"` | Unique ID of the provider plugin. | [broker.ts:295](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/broker.ts#L295) |
+| <a id="logger"></a> `logger` | `readonly` | [`ProviderLogger`](../interfaces/ProviderLogger.md) | `undefined` | Structured logger writing into Zenith's Kermit logging engine. | [broker.ts:286](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/broker.ts#L286) |
+| <a id="providerid"></a> `providerId` | `readonly` | `string` | `"provider"` | Unique ID of the provider plugin. | [broker.ts:295](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/broker.ts#L295) |
 
 ## Methods
 
@@ -56,7 +56,7 @@ Constructs a new ProviderContext.
 
 > **fetch**(`url`, `init?`): `Promise`\<[`FetchResponse`](../interfaces/FetchResponse.md)\>
 
-Defined in: [broker.ts:323](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/broker.ts#L323)
+Defined in: [broker.ts:323](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/broker.ts#L323)
 
 Performs an HTTP request mediated by the Zenith host Ktor broker.
 
@@ -95,7 +95,7 @@ const json = await res.json();
 
 > **getMirror**(): `Promise`\<`string`\>
 
-Defined in: [broker.ts:437](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/broker.ts#L437)
+Defined in: [broker.ts:437](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/broker.ts#L437)
 
 Resolves the active provider mirror URL chosen by user preference.
 
@@ -120,7 +120,7 @@ const url = `${mirror}/catalog`;
 
 > **getSetting**(`key`): `Promise`\<`string` \| `undefined`\>
 
-Defined in: [broker.ts:396](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/broker.ts#L396)
+Defined in: [broker.ts:396](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/broker.ts#L396)
 
 Retrieves a setting value scoped to this provider.
 
@@ -150,7 +150,7 @@ const apiKey = await context.getSetting("api_key");
 
 > **resolveStream**(`extractorName`, `url`): `Promise`\<[`ProviderMediaStream`](../interfaces/ProviderMediaStream.md)[]\>
 
-Defined in: [broker.ts:458](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/broker.ts#L458)
+Defined in: [broker.ts:458](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/broker.ts#L458)
 
 Mediates stream extraction through host-registered StreamExtractors.
 
@@ -181,7 +181,7 @@ const streams = await context.resolveStream("sibnet", embedUrl);
 
 > **setSetting**(`key`, `value`): `Promise`\<`void`\>
 
-Defined in: [broker.ts:417](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/broker.ts#L417)
+Defined in: [broker.ts:417](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/broker.ts#L417)
 
 Persists a setting value scoped to this provider.
 

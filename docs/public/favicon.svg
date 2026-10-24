@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <defs>
+    <linearGradient id="zenith-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7F67BE" />
+      <stop offset="50%" stop-color="#6750A4" />
+      <stop offset="100%" stop-color="#4F378B" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="2" stdDeviation="1.5" flood-opacity="0.25" flood-color="#1D192B"/>
+    </filter>
+  </defs>
+  <!-- Background squircle -->
+  <rect x="4" y="4" width="40" height="40" rx="10" fill="url(#zenith-grad)" filter="url(#shadow)"/>
+  <!-- Zenith Star Monogram + Play Accent -->
+  <path d="M24 10 L26.5 19.5 L36 22 L26.5 24.5 L24 34 L21.5 24.5 L12 22 L21.5 19.5 Z" fill="#EADDFF" />
+  <circle cx="24" cy="22" r="3" fill="#FFFFFF"/>
+  <!-- Small play chevron in bottom corner -->
+  <polygon points="30,30 38,34 30,38" fill="#D0BCFF" opacity="0.9"/>
+</svg>

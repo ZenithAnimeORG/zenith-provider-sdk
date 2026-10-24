@@ -8,7 +8,7 @@
 
 > **defineBookmarkImporter**(`definition`): [`BookmarkImporterExport`](../interfaces/BookmarkImporterExport.md)
 
-Defined in: [bookmark-importer.ts:192](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/bookmark-importer.ts#L192)
+Defined in: [bookmark-importer.ts:192](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/bookmark-importer.ts#L192)
 
 Entrypoint factory for declaring a Zenith bookmark/watchlist importer module.
 

@@ -6,7 +6,7 @@
 
 # Interface: BookmarkSource
 
-Defined in: [bookmark-importer.ts:19](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/bookmark-importer.ts#L19)
+Defined in: [bookmark-importer.ts:19](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/bookmark-importer.ts#L19)
 
 File source interface provided to importers for streaming and reading user uploaded files.
 
@@ -16,7 +16,7 @@ File source interface provided to importers for streaming and reading user uploa
 
 > **readCsvRows**(): `AsyncIterable`\<`Record`\<`string`, `string`\>\>
 
-Defined in: [bookmark-importer.ts:42](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/bookmark-importer.ts#L42)
+Defined in: [bookmark-importer.ts:42](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/bookmark-importer.ts#L42)
 
 Asynchronously iterates over parsed CSV rows as header-keyed records.
 
@@ -42,7 +42,7 @@ for await (const row of source.readCsvRows()) {
 
 > **readHeaderAndSample**(`maxLines`): `Promise`\<`string`[]\>
 
-Defined in: [bookmark-importer.ts:26](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/bookmark-importer.ts#L26)
+Defined in: [bookmark-importer.ts:26](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/bookmark-importer.ts#L26)
 
 Reads the initial lines of the file for schema detection and preview display.
 
@@ -64,7 +64,7 @@ Array of raw string lines.
 
 > **readLines**(): `AsyncIterable`\<`string`\>
 
-Defined in: [bookmark-importer.ts:49](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/bookmark-importer.ts#L49)
+Defined in: [bookmark-importer.ts:49](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/bookmark-importer.ts#L49)
 
 Asynchronously iterates over individual raw text lines from the input file.
 
@@ -80,7 +80,7 @@ Async iterable of string lines.
 
 > **readText**(): `Promise`\<`string`\>
 
-Defined in: [bookmark-importer.ts:58](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/bookmark-importer.ts#L58)
+Defined in: [bookmark-importer.ts:58](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/bookmark-importer.ts#L58)
 
 Reads the entire input file into memory as a single UTF-8 string.
 

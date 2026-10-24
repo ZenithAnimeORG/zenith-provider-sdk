@@ -8,6 +8,6 @@
 
 > `const` **MAX\_ICON\_BYTES**: `number`
 
-Defined in: [package.ts:54](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/package.ts#L54)
+Defined in: [package.ts:54](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/package.ts#L54)
 
 Maximum size of `icon.png` in bytes (256 KiB).

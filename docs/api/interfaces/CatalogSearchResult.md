@@ -6,7 +6,7 @@
 
 # Interface: CatalogSearchResult
 
-Defined in: [models.ts:252](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/models.ts#L252)
+Defined in: [models.ts:252](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/models.ts#L252)
 
 Paginated response returned by catalog search queries.
 
@@ -23,5 +23,5 @@ const result: CatalogSearchResult = {
 
 | Property | Type | Description | Defined in |
 | ------ | ------ | ------ | ------ |
-| <a id="hasnextpage"></a> `hasNextPage` | `boolean` | Indicates whether subsequent pages of results exist. | [models.ts:261](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/models.ts#L261) |
-| <a id="items"></a> `items` | [`CatalogMediaItem`](CatalogMediaItem.md)[] | List of media items found on the current page. | [models.ts:256](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/models.ts#L256) |
+| <a id="hasnextpage"></a> `hasNextPage` | `boolean` | Indicates whether subsequent pages of results exist. | [models.ts:261](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/models.ts#L261) |
+| <a id="items"></a> `items` | [`CatalogMediaItem`](CatalogMediaItem.md)[] | List of media items found on the current page. | [models.ts:256](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/models.ts#L256) |

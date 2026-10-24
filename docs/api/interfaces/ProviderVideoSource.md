@@ -6,7 +6,7 @@
 
 # Interface: ProviderVideoSource
 
-Defined in: [models.ts:340](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/models.ts#L340)
+Defined in: [models.ts:340](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/models.ts#L340)
 
 Video release or translation source containing a list of episodes.
 
@@ -30,8 +30,8 @@ const source: ProviderVideoSource = {
 
 | Property | Type | Description | Defined in |
 | ------ | ------ | ------ | ------ |
-| <a id="episodes"></a> `episodes` | [`ProviderEpisode`](ProviderEpisode.md)[] | List of available episodes in this source. | [models.ts:359](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/models.ts#L359) |
-| <a id="name"></a> `name` | `string` | Display name of the source (e.g. "AniLibria", "Subtitles - Official"). | [models.ts:344](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/models.ts#L344) |
-| <a id="qualities"></a> `qualities?` | `Record`\<`string`, `string`\> \| `null` | Optional dictionary of available quality levels. | [models.ts:364](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/models.ts#L364) |
-| <a id="translationname"></a> `translationName?` | `string` | Specific dubbing team or studio name. | [models.ts:349](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/models.ts#L349) |
-| <a id="translationtype"></a> `translationType?` | [`ProviderTranslationType`](../type-aliases/ProviderTranslationType.md) | Type of translation (`"DUB"`, `"VO"`, or `"SUB"`). | [models.ts:354](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/models.ts#L354) |
+| <a id="episodes"></a> `episodes` | [`ProviderEpisode`](ProviderEpisode.md)[] | List of available episodes in this source. | [models.ts:359](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/models.ts#L359) |
+| <a id="name"></a> `name` | `string` | Display name of the source (e.g. "AniLibria", "Subtitles - Official"). | [models.ts:344](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/models.ts#L344) |
+| <a id="qualities"></a> `qualities?` | `Record`\<`string`, `string`\> \| `null` | Optional dictionary of available quality levels. | [models.ts:364](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/models.ts#L364) |
+| <a id="translationname"></a> `translationName?` | `string` | Specific dubbing team or studio name. | [models.ts:349](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/models.ts#L349) |
+| <a id="translationtype"></a> `translationType?` | [`ProviderTranslationType`](../type-aliases/ProviderTranslationType.md) | Type of translation (`"DUB"`, `"VO"`, or `"SUB"`). | [models.ts:354](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/models.ts#L354) |

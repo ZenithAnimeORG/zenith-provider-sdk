@@ -77,7 +77,7 @@ const result = await response.json();
 
 ## Работа с заголовками через `FetchHeaders`
 
-Zenith предоставляет регистронезависимый класс {@link FetchHeaders}:
+Zenith предоставляет регистронезависимый класс [`FetchHeaders`](/api/classes/FetchHeaders):
 
 ```ts
 const response = await context.fetch("https://api.example.com/data");

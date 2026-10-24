@@ -8,7 +8,7 @@
 
 > **UserMediaStatus** = `"WATCHING"` \| `"PLANNED"` \| `"COMPLETED"` \| `"ON_HOLD"` \| `"DROPPED"`
 
-Defined in: [models.ts:58](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/models.ts#L58)
+Defined in: [models.ts:58](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/models.ts#L58)
 
 User watchlist status for media tracking.
 

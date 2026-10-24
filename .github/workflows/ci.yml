@@ -44,10 +44,14 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          npm ci
+          npm --prefix sdk-ts ci
 
-      - name: Typecheck and test TypeScript SDK
+      - name: Typecheck, test, and build TypeScript SDK and Docs
         run: |
           npm run typecheck
           npm test
+          npm run build
+          npm run docs:build
 

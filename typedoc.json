@@ -14,5 +14,6 @@
   "parametersFormat": "table",
   "propertiesFormat": "table",
   "enumMembersFormat": "table",
-  "typeDeclarationFormat": "table"
+  "typeDeclarationFormat": "table",
+  "gitRevision": "main"
 }

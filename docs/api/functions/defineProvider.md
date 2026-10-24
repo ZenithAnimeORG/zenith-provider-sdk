@@ -8,7 +8,7 @@
 
 > **defineProvider**(`definition`): [`ProviderExport`](../interfaces/ProviderExport.md)
 
-Defined in: [provider.ts:630](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/provider.ts#L630)
+Defined in: [provider.ts:630](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/provider.ts#L630)
 
 Entrypoint factory for declaring a Zenith media/catalog/tracker provider module.
 

@@ -6,7 +6,7 @@
 
 # Interface: BookmarkImporterDefinition
 
-Defined in: [bookmark-importer.ts:107](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/bookmark-importer.ts#L107)
+Defined in: [bookmark-importer.ts:107](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/bookmark-importer.ts#L107)
 
 Interface implemented by bookmark and watchlist importer plugins.
 
@@ -38,8 +38,8 @@ export default defineBookmarkImporter({
 
 | Property | Modifier | Type | Description | Defined in |
 | ------ | ------ | ------ | ------ | ------ |
-| <a id="instructions"></a> `instructions?` | `readonly` | [`ImportInstructionStep`](ImportInstructionStep.md)[] | User instructions displayed in Zenith UI explaining how to export data from the source website. | [bookmark-importer.ts:116](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/bookmark-importer.ts#L116) |
-| <a id="supportedextensions"></a> `supportedExtensions?` | `readonly` | `string`[] | Array of supported file extensions (e.g. `[".csv", ".json", ".xml"]`). | [bookmark-importer.ts:111](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/bookmark-importer.ts#L111) |
+| <a id="instructions"></a> `instructions?` | `readonly` | [`ImportInstructionStep`](ImportInstructionStep.md)[] | User instructions displayed in Zenith UI explaining how to export data from the source website. | [bookmark-importer.ts:116](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/bookmark-importer.ts#L116) |
+| <a id="supportedextensions"></a> `supportedExtensions?` | `readonly` | `string`[] | Array of supported file extensions (e.g. `[".csv", ".json", ".xml"]`). | [bookmark-importer.ts:111](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/bookmark-importer.ts#L111) |
 
 ## Methods
 
@@ -47,7 +47,7 @@ export default defineBookmarkImporter({
 
 > **preview**(`source`, `context`): `Promise`\<[`ImportPreviewResult`](ImportPreviewResult.md)\>
 
-Defined in: [bookmark-importer.ts:125](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/bookmark-importer.ts#L125)
+Defined in: [bookmark-importer.ts:125](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/bookmark-importer.ts#L125)
 
 Generates a preview summary from the input file before the user confirms import.
 
@@ -70,7 +70,7 @@ Detected format and sample rows.
 
 > **readBookmarks**(`source`, `context`): `AsyncIterable`\<[`RawImportEntry`](RawImportEntry.md), `any`, `any`\> \| `Promise`\<[`RawImportEntry`](RawImportEntry.md)[]\>
 
-Defined in: [bookmark-importer.ts:137](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/bookmark-importer.ts#L137)
+Defined in: [bookmark-importer.ts:137](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/bookmark-importer.ts#L137)
 
 Parses the file and streams or returns all imported bookmark entries.
 

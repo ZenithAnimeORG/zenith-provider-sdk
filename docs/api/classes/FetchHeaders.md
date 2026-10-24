@@ -6,7 +6,7 @@
 
 # Class: FetchHeaders
 
-Defined in: [broker.ts:51](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/broker.ts#L51)
+Defined in: [broker.ts:51](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/broker.ts#L51)
 
 Case-insensitive HTTP header collection matching the standard Web Headers interface.
 
@@ -32,7 +32,7 @@ console.log(headers.has("User-Agent"));   // true
 
 > **new FetchHeaders**(`init?`): `FetchHeaders`
 
-Defined in: [broker.ts:59](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/broker.ts#L59)
+Defined in: [broker.ts:59](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/broker.ts#L59)
 
 Creates a new FetchHeaders instance from a dictionary of header values.
 
@@ -52,7 +52,7 @@ Creates a new FetchHeaders instance from a dictionary of header values.
 
 > **entries**(): `IterableIterator`\<\[`string`, `string`\]\>
 
-Defined in: [broker.ts:103](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/broker.ts#L103)
+Defined in: [broker.ts:103](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/broker.ts#L103)
 
 Returns an iterator of `[key, value]` pairs.
 
@@ -66,7 +66,7 @@ Returns an iterator of `[key, value]` pairs.
 
 > **forEach**(`callback`): `void`
 
-Defined in: [broker.ts:96](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/broker.ts#L96)
+Defined in: [broker.ts:96](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/broker.ts#L96)
 
 Executes a callback function for each header entry.
 
@@ -86,7 +86,7 @@ Executes a callback function for each header entry.
 
 > **get**(`name`): `string` \| `null`
 
-Defined in: [broker.ts:77](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/broker.ts#L77)
+Defined in: [broker.ts:77](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/broker.ts#L77)
 
 Retrieves the value of a header by name (case-insensitive).
 
@@ -108,7 +108,7 @@ The header value, or `null` if the header is not present.
 
 > **has**(`name`): `boolean`
 
-Defined in: [broker.ts:87](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/broker.ts#L87)
+Defined in: [broker.ts:87](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/broker.ts#L87)
 
 Checks whether a header exists in the collection (case-insensitive).
 
@@ -130,7 +130,7 @@ Checks whether a header exists in the collection (case-insensitive).
 
 > **keys**(): `IterableIterator`\<`string`\>
 
-Defined in: [broker.ts:110](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/broker.ts#L110)
+Defined in: [broker.ts:110](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/broker.ts#L110)
 
 Returns an iterator of header names.
 
@@ -144,7 +144,7 @@ Returns an iterator of header names.
 
 > **values**(): `IterableIterator`\<`string`\>
 
-Defined in: [broker.ts:117](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/broker.ts#L117)
+Defined in: [broker.ts:117](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/broker.ts#L117)
 
 Returns an iterator of header values.
 

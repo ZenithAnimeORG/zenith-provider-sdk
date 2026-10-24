@@ -6,7 +6,7 @@
 
 # Interface: BookmarkImporterExport
 
-Defined in: [bookmark-importer.ts:146](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/bookmark-importer.ts#L146)
+Defined in: [bookmark-importer.ts:146](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/bookmark-importer.ts#L146)
 
 Export wrapper produced by [defineBookmarkImporter](../functions/defineBookmarkImporter.md).
 
@@ -14,5 +14,5 @@ Export wrapper produced by [defineBookmarkImporter](../functions/defineBookmarkI
 
 | Property | Modifier | Type | Description | Defined in |
 | ------ | ------ | ------ | ------ | ------ |
-| <a id="definition"></a> `definition` | `readonly` | [`BookmarkImporterDefinition`](BookmarkImporterDefinition.md) | The wrapped bookmark importer implementation. | [bookmark-importer.ts:155](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/bookmark-importer.ts#L155) |
-| <a id="type"></a> `type` | `readonly` | `"bookmark-importer"` | Export discriminator indicating this module is a bookmark importer. | [bookmark-importer.ts:150](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/bookmark-importer.ts#L150) |
+| <a id="definition"></a> `definition` | `readonly` | [`BookmarkImporterDefinition`](BookmarkImporterDefinition.md) | The wrapped bookmark importer implementation. | [bookmark-importer.ts:155](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/bookmark-importer.ts#L155) |
+| <a id="type"></a> `type` | `readonly` | `"bookmark-importer"` | Export discriminator indicating this module is a bookmark importer. | [bookmark-importer.ts:150](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/bookmark-importer.ts#L150) |

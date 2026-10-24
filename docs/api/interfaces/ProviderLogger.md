@@ -6,7 +6,7 @@
 
 # Interface: ProviderLogger
 
-Defined in: [broker.ts:184](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/broker.ts#L184)
+Defined in: [broker.ts:184](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/broker.ts#L184)
 
 Structured logger writing into Zenith's centralized Kermit logging subsystem.
 
@@ -26,7 +26,7 @@ context.logger.error("Parsing failed", err);
 
 > **debug**(`message`): `void`
 
-Defined in: [broker.ts:190](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/broker.ts#L190)
+Defined in: [broker.ts:190](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/broker.ts#L190)
 
 Records a verbose debug trace message.
 
@@ -46,7 +46,7 @@ Records a verbose debug trace message.
 
 > **error**(`message`, `error?`): `void`
 
-Defined in: [broker.ts:212](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/broker.ts#L212)
+Defined in: [broker.ts:212](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/broker.ts#L212)
 
 Records an error message and optional exception trace.
 
@@ -67,7 +67,7 @@ Records an error message and optional exception trace.
 
 > **info**(`message`): `void`
 
-Defined in: [broker.ts:197](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/broker.ts#L197)
+Defined in: [broker.ts:197](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/broker.ts#L197)
 
 Records an informational status message.
 
@@ -87,7 +87,7 @@ Records an informational status message.
 
 > **warn**(`message`): `void`
 
-Defined in: [broker.ts:204](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/broker.ts#L204)
+Defined in: [broker.ts:204](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/broker.ts#L204)
 
 Records a warning message indicating non-critical issues or unexpected states.
 

@@ -77,7 +77,7 @@ const result = await response.json();
 
 ## Working with `FetchHeaders`
 
-Zenith provides a case-insensitive {@link FetchHeaders} implementation:
+Zenith provides a case-insensitive [`FetchHeaders`](/api/classes/FetchHeaders) implementation:
 
 ```ts
 const response = await context.fetch("https://api.example.com/data");

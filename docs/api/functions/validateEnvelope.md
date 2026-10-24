@@ -8,7 +8,7 @@
 
 > **validateEnvelope**(`entries`, `manifest`): [`ValidationResult`](../interfaces/ValidationResult.md)
 
-Defined in: [package.ts:200](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/089a8e3b65981c189d4129603af1951c324df527/sdk-ts/src/package.ts#L200)
+Defined in: [package.ts:200](https://github.com/ZenithAnimeORG/zenith-provider-sdk/blob/main/sdk-ts/src/package.ts#L200)
 
 Validates that a `.zpk` package envelope satisfies physical archive constraints.
 
