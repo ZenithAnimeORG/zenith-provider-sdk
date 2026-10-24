@@ -1,0 +1,20 @@
+{
+  "type": "Success",
+  "value": {
+    "type": "ImportData",
+    "result": {
+      "sourceName": "anixart",
+      "entries": [
+        {
+          "title": "Steins;Gate",
+          "originalTitle": "Steins;Gate",
+          "releaseYear": 2011,
+          "watchedEpisodes": 24,
+          "totalEpisodes": 24,
+          "targetStatus": "COMPLETED",
+          "rating": 10
+        }
+      ]
+    }
+  }
+}

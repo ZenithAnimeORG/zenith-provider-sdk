@@ -1,0 +1,28 @@
+{
+  "type": "Success",
+  "value": {
+    "type": "VideoSources",
+    "result": [
+      {
+        "name": "Kodik",
+        "translationName": "AniLibria",
+        "translationType": "DUB",
+        "episodes": [
+          {
+            "number": 1,
+            "url": "https://kodik.info/seria/123/ep1",
+            "quality": {
+              "720p": "https://stream.example.com/720.m3u8",
+              "1080p": "https://stream.example.com/1080.m3u8"
+            },
+            "providerId": "kodik"
+          }
+        ],
+        "qualities": {
+          "1080p": "1080p Full HD",
+          "720p": "720p HD"
+        }
+      }
+    ]
+  }
+}

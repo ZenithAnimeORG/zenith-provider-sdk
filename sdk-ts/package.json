@@ -1,0 +1,49 @@
+{
+  "name": "@zenith/sdk",
+  "version": "0.1.0",
+  "description": "Zenith Media Player TypeScript Provider SDK",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./provider": {
+      "import": "./dist/provider.js",
+      "types": "./dist/provider.d.ts"
+    },
+    "./bookmark-importer": {
+      "import": "./dist/bookmark-importer.js",
+      "types": "./dist/bookmark-importer.d.ts"
+    },
+    "./dom": {
+      "import": "./dist/dom.js",
+      "types": "./dist/dom.d.ts"
+    },
+    "./package": {
+      "import": "./dist/package.js",
+      "types": "./dist/package.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsc && node esbuild.config.mjs",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "esbuild": "^0.25.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
+  }
+}

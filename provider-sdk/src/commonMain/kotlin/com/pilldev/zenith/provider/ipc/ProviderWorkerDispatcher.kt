@@ -2,6 +2,7 @@ package com.pilldev.zenith.provider.ipc
 
 import com.pilldev.zenith.provider.CatalogProvider
 import com.pilldev.zenith.provider.ImportProvider
+import com.pilldev.zenith.provider.ImportPreviewResult
 import com.pilldev.zenith.provider.MediaSourceProvider
 import com.pilldev.zenith.provider.PosterSourceProvider
 import com.pilldev.zenith.provider.SkipTimingsProvider
@@ -209,6 +210,17 @@ public class ProviderWorkerDispatcher(
             is ProviderWorkerOperation.ImportBackup -> withCapability<ImportProvider>(activeProvider) {
                 mapResult(parseBackup(readBlob(operation.input))) { ProviderWorkerValue.ImportData(it) }
             }
+            is ProviderWorkerOperation.ImportPreview -> withCapability<ImportProvider>(activeProvider) {
+                success(
+                    ProviderWorkerValue.ImportPreview(
+                        ImportPreviewResult(
+                            format = "csv",
+                            rows = operation.sampleLines,
+                            totalDetectedCount = operation.sampleLines.size,
+                        ),
+                    ),
+                )
+            }
             is ProviderWorkerOperation.StreamCanExtract -> withStreamExtractor(activeProvider, operation.extractorName) {
                 mapResult(canExtract(operation.url)) { ProviderWorkerValue.BooleanResult(it) }
             }
@@ -286,7 +298,9 @@ public class ProviderWorkerDispatcher(
             is ProviderWorkerOperation.EpisodeWatched,
             is ProviderWorkerOperation.SyncStatus,
             -> ProviderCapability.TRACKER
-            is ProviderWorkerOperation.ImportBackup -> ProviderCapability.IMPORT
+            is ProviderWorkerOperation.ImportBackup,
+            is ProviderWorkerOperation.ImportPreview,
+            -> ProviderCapability.IMPORT
             is ProviderWorkerOperation.StreamCanExtract,
             is ProviderWorkerOperation.StreamExtract,
             -> ProviderCapability.STREAM_EXTRACTOR

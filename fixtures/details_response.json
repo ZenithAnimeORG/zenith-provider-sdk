@@ -1,0 +1,33 @@
+{
+  "type": "Success",
+  "value": {
+    "type": "CatalogDetails",
+    "result": {
+      "mediaRef": {
+        "id": "1",
+        "externalIds": {
+          "shikimori": "1"
+        },
+        "title": "Cowboy Bebop",
+        "alternateTitles": []
+      },
+      "title": "Cowboy Bebop",
+      "originalTitle": "カウボーイビバップ",
+      "description": "In 2071, roughly fifty years after an accident with a hyperspace gateway made the Earth almost uninhabitable...",
+      "posterUrl": "https://shikimori.one/system/animes/original/1.jpg",
+      "bannerUrl": "https://shikimori.one/system/animes/banner/1.jpg",
+      "score": 8.75,
+      "year": 1998,
+      "episodesCount": 26,
+      "genres": [
+        "Action",
+        "Sci-Fi",
+        "Space"
+      ],
+      "studios": [
+        "Sunrise"
+      ],
+      "status": "released"
+    }
+  }
+}

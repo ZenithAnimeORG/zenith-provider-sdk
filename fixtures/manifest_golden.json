@@ -1,0 +1,33 @@
+{
+  "id": "shikimori",
+  "name": "Shikimori",
+  "version": "1.0.0",
+  "sdkVersion": "0.1.0",
+  "packageFormat": "zpk/v2",
+  "moduleApiVersion": "1.0.0",
+  "entrypoint": "index.js",
+  "description": "Comprehensive anime catalog and tracker provider",
+  "author": "Zenith Community",
+  "homepage": "https://shikimori.one",
+  "icon": "icon.png",
+  "capabilities": [
+    "CATALOG",
+    "TRACKER"
+  ],
+  "hosts": [
+    "shikimori.one",
+    "*.shikimori.one"
+  ],
+  "entry": {
+    "js": "index.js"
+  },
+  "settings": "settings.json",
+  "localizedNames": {
+    "ru": "Шикимори",
+    "en": "Shikimori"
+  },
+  "localizedDescriptions": {
+    "ru": "Каталог аниме и трекер прогресса",
+    "en": "Anime catalog and progress tracker"
+  }
+}

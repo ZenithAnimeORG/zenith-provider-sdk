@@ -1,0 +1,29 @@
+{
+  "type": "Success",
+  "value": {
+    "type": "CatalogSearch",
+    "result": {
+      "items": [
+        {
+          "mediaRef": {
+            "id": "1",
+            "externalIds": {
+              "shikimori": "1"
+            },
+            "title": "Cowboy Bebop",
+            "alternateTitles": [
+              "Кавбой Бибоп"
+            ]
+          },
+          "title": "Cowboy Bebop",
+          "originalTitle": "Cowboy Bebop",
+          "posterUrl": "https://shikimori.one/system/animes/original/1.jpg",
+          "score": 8.75,
+          "year": 1998,
+          "totalEpisodes": 26
+        }
+      ],
+      "hasNextPage": true
+    }
+  }
+}

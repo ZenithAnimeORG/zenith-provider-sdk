@@ -2,10 +2,16 @@ package com.pilldev.zenith.provider.model
 
 import kotlinx.serialization.Serializable
 
+public const val PACKAGE_FORMAT_V1: String = "zpk/v1"
+public const val PACKAGE_FORMAT_V2: String = "zpk/v2"
+public const val CURRENT_PACKAGE_FORMAT: String = PACKAGE_FORMAT_V2
+public const val CURRENT_MODULE_API_VERSION: String = "1.0.0"
+
 @Serializable
 public data class PluginArtifactEntry(
     val jvm: String = "provider.jar",
     val android: String = "provider.dex",
+    val js: String = "index.js",
 )
 
 @Serializable
@@ -14,6 +20,9 @@ public data class PluginManifest(
     val name: String,
     val version: String,
     val sdkVersion: String = ProviderSdkInfo.VERSION,
+    val packageFormat: String = PACKAGE_FORMAT_V2,
+    val moduleApiVersion: String = CURRENT_MODULE_API_VERSION,
+    val entrypoint: String = "index.js",
     val description: String = "",
     val author: String? = null,
     val homepage: String? = null,

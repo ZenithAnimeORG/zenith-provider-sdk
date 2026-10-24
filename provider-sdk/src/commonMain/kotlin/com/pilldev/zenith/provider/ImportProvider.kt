@@ -37,3 +37,10 @@ public data class RawImportEntry(
     val targetStatus: UserMediaStatus = UserMediaStatus.WATCHING,
     val rating: Int? = null,
 )
+
+@Serializable
+public data class ImportPreviewResult(
+    val format: String,
+    val rows: List<String> = emptyList(),
+    val totalDetectedCount: Int? = null,
+)

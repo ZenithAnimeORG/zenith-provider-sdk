@@ -6,6 +6,7 @@ import com.pilldev.zenith.provider.CatalogSearchResult
 import com.pilldev.zenith.provider.CatalogSection
 import com.pilldev.zenith.provider.ImportBatch
 import com.pilldev.zenith.provider.ImportInstructionStep
+import com.pilldev.zenith.provider.ImportPreviewResult
 import com.pilldev.zenith.provider.model.MediaRef
 import com.pilldev.zenith.provider.model.PluginManifest
 import com.pilldev.zenith.provider.model.ProviderEpisode
@@ -170,6 +171,9 @@ public sealed interface ProviderWorkerValue {
     public data class ImportData(val result: ImportBatch) : ProviderWorkerValue
 
     @Serializable
+    public data class ImportPreview(val result: ImportPreviewResult) : ProviderWorkerValue
+
+    @Serializable
     public data class ActionResult(val result: String) : ProviderWorkerValue
 
     @Serializable
@@ -245,6 +249,9 @@ public sealed interface ProviderWorkerOperation {
 
     @Serializable
     public data class ImportBackup(val input: ProviderWorkerBlob) : ProviderWorkerOperation
+
+    @Serializable
+    public data class ImportPreview(val sampleLines: List<String> = emptyList()) : ProviderWorkerOperation
 
     @Serializable
     public data class ExecuteAction(val actionId: String) : ProviderWorkerOperation
