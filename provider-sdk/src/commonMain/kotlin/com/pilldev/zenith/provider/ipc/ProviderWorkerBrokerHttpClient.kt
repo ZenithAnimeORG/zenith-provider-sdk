@@ -3,6 +3,8 @@ package com.pilldev.zenith.provider.ipc
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngineBase
 import io.ktor.client.engine.callContext
+import io.ktor.client.plugins.api.createClientPlugin
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.HttpRequestData
 import io.ktor.client.request.HttpResponseData
 import io.ktor.http.Headers
@@ -10,21 +12,21 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpProtocolVersion
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.content.OutgoingContent
+import io.ktor.serialization.kotlinx.json.json
+import io.ktor.util.AttributeKey
 import io.ktor.utils.io.ByteChannel
 import io.ktor.utils.io.ByteReadChannel
 import io.ktor.utils.io.readAvailable
 import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
-import io.ktor.client.request.HttpRequestPipeline
-import io.ktor.util.AttributeKey
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlin.coroutines.CoroutineContext
 import kotlinx.io.Buffer
 import kotlinx.io.readByteArray
 import kotlinx.io.write
+import kotlinx.serialization.json.Json
 
 public fun createProviderWorkerBrokerHttpClient(
     broker: ProviderWorkerBrokerClient,
@@ -51,17 +53,31 @@ public fun createProviderWorkerBrokerHttpClient(
     require(maxResponseBytes in 1..PROVIDER_WORKER_MAX_BLOB_BYTES.toInt()) {
         "Provider HTTP response limit must be between 1 byte and the worker blob limit"
     }
-    val client = HttpClient(ProviderWorkerBrokerHttpEngine(exchange, maxRequestBytes, maxResponseBytes))
-    client.requestPipeline.intercept(HttpRequestPipeline.State) {
-        val workerContext = currentCoroutineContext()[WorkerRequestContext]
-        if (workerContext != null) {
-            context.attributes.put(WorkerRequestContextAttributeKey, workerContext)
+    val client = HttpClient(ProviderWorkerBrokerHttpEngine(exchange, maxRequestBytes, maxResponseBytes)) {
+        install(WorkerContextPlugin)
+        install(ContentNegotiation) {
+            json(
+                Json {
+                    ignoreUnknownKeys = true
+                    isLenient = true
+                    coerceInputValues = true
+                },
+            )
         }
     }
     return client
 }
 
 internal val WorkerRequestContextAttributeKey = AttributeKey<WorkerRequestContext>("WorkerRequestContext")
+
+private val WorkerContextPlugin = createClientPlugin("WorkerContextPlugin") {
+    onRequest { request, _ ->
+        val workerContext = currentCoroutineContext()[WorkerRequestContext]
+        if (workerContext != null) {
+            request.attributes.put(WorkerRequestContextAttributeKey, workerContext)
+        }
+    }
+}
 
 private class ProviderWorkerBrokerHttpEngine(
     private val exchange: suspend (

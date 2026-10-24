@@ -372,19 +372,22 @@ public class ProviderWorkerSession private constructor(
             }
         } catch (cancelled: CancellationException) {
             if (scope.coroutineContext[Job]?.isActive == true) {
+                runCatching {
+                    close(
+                        ProviderWorkerFailureCode.WORKER_CRASHED,
+                        cancelled.message ?: "Provider worker reader cancelled",
+                        cancelled,
+                    )
+                }
+            }
+        } catch (error: Throwable) {
+            runCatching {
                 close(
                     ProviderWorkerFailureCode.WORKER_CRASHED,
-                    cancelled.message ?: "Provider worker reader cancelled",
-                    cancelled,
+                    error.message ?: "Provider worker transport failed",
+                    error,
                 )
             }
-            throw cancelled
-        } catch (error: Exception) {
-            close(
-                ProviderWorkerFailureCode.WORKER_CRASHED,
-                error.message ?: "Provider worker transport failed",
-                error,
-            )
         }
     }
 

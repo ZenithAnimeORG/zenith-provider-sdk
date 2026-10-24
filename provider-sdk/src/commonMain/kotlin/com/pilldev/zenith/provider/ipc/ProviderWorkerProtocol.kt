@@ -24,7 +24,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 public const val PROVIDER_WORKER_PROTOCOL_VERSION: Int = 1
-public const val PROVIDER_WORKER_MAX_FRAME_BYTES: Int = 96 * 1024
+public const val PROVIDER_WORKER_MAX_FRAME_BYTES: Int = 8 * 1024 * 1024
 public const val PROVIDER_WORKER_MAX_BLOB_CHUNK_BYTES: Int = 12 * 1024
 public const val PROVIDER_WORKER_MAX_BLOB_BYTES: Long = 32L * 1024 * 1024
 public const val PROVIDER_WORKER_MAX_HTTP_BODY_BYTES: Int = 8 * 1024 * 1024
