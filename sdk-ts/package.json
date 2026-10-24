@@ -30,6 +30,10 @@
     "./dispatcher": {
       "import": "./dist/dispatcher.js",
       "types": "./dist/dispatcher.d.ts"
+    },
+    "./polyfills": {
+      "import": "./dist/polyfills.js",
+      "types": "./dist/polyfills.d.ts"
     }
   },
   "files": [
