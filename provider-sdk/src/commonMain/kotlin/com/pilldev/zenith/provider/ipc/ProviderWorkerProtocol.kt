@@ -471,3 +471,16 @@ public object ProviderWorkerProtocol {
     private val REQUEST_ID_PATTERN = Regex("[A-Za-z0-9_-]{1,64}")
     private val SHA256_PATTERN = Regex("[A-Fa-f0-9]{64}")
 }
+
+public fun interface ProviderWorkerBroker {
+    public suspend fun handle(
+        operation: ProviderBrokerOperation,
+        requestBody: ByteArray?,
+    ): ProviderWorkerBrokerResponse
+}
+
+public data class ProviderWorkerBrokerResponse(
+    public val result: ProviderBrokerResult,
+    public val responseBody: ByteArray? = null,
+)
+

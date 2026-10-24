@@ -7,8 +7,6 @@ import io.ktor.client.HttpClient
 public interface ProviderContext {
     public val httpClient: HttpClient
 
-    public val jsEvaluator: JsEvaluator? get() = null
-
     public fun getSetting(key: String): String?
 
     public fun setSetting(

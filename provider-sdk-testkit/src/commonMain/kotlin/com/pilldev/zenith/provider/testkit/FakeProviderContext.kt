@@ -1,6 +1,5 @@
 package com.pilldev.zenith.provider.testkit
 
-import com.pilldev.zenith.provider.context.JsEvaluator
 import com.pilldev.zenith.provider.context.ProviderContext
 import com.pilldev.zenith.provider.model.ProviderMediaStream
 import com.pilldev.zenith.provider.model.ProviderResult
@@ -10,7 +9,6 @@ import kotlinx.coroutines.sync.withLock
 
 public class FakeProviderContext(
     override val httpClient: HttpClient = MockProviderHttpClient.withCanonicalFixtures(),
-    override val jsEvaluator: JsEvaluator? = null,
     private val initialSettings: Map<String, String> = emptyMap(),
     private val effectiveMirrorValue: String = "",
 ) : ProviderContext {
