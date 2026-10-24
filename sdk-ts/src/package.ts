@@ -1,24 +1,105 @@
+/**
+ * Package envelope specification and archive validation constants and validators.
+ *
+ * Defines the physical boundaries, size limits, and security rules for portable `.zpk` packages.
+ *
+ * @module package
+ */
+
 import { PluginManifest } from "./models.js";
 
+/**
+ * Legacy package format identifier for JVM/Dex bundles.
+ */
 export const PACKAGE_FORMAT_V1 = "zpk/v1";
+
+/**
+ * Portable TypeScript/QuickJS package format identifier.
+ */
 export const PACKAGE_FORMAT_V2 = "zpk/v2";
+
+/**
+ * Current standard package format for all modern Zenith provider packages.
+ */
 export const CURRENT_PACKAGE_FORMAT = PACKAGE_FORMAT_V2;
+
+/**
+ * Current runtime module API version.
+ */
 export const CURRENT_MODULE_API_VERSION = "1.0.0";
 
+/**
+ * Maximum compressed size of a `.zpk` archive in bytes (16 MiB).
+ */
 export const MAX_PACKAGE_SIZE_BYTES = 16 * 1024 * 1024; // 16 MiB
+
+/**
+ * Maximum size of the bundled JavaScript entrypoint file in bytes (5 MiB).
+ */
 export const MAX_ENTRYPOINT_BYTES = 5 * 1024 * 1024; // 5 MiB
+
+/**
+ * Maximum size of `manifest.json` in bytes (256 KiB).
+ */
 export const MAX_MANIFEST_BYTES = 256 * 1024; // 256 KiB
+
+/**
+ * Maximum size of `settings.json` in bytes (128 KiB).
+ */
 export const MAX_SETTINGS_BYTES = 128 * 1024; // 128 KiB
+
+/**
+ * Maximum size of `icon.png` in bytes (256 KiB).
+ */
 export const MAX_ICON_BYTES = 256 * 1024; // 256 KiB
+
+/**
+ * Maximum size of any individual static resource file in bytes (2 MiB).
+ */
 export const MAX_RESOURCE_BYTES = 2 * 1024 * 1024; // 2 MiB
+
+/**
+ * Maximum total uncompressed size across all files in the archive in bytes (32 MiB).
+ */
 export const MAX_TOTAL_UNCOMPRESSED_BYTES = 32 * 1024 * 1024; // 32 MiB
+
+/**
+ * Maximum number of files permitted inside a `.zpk` archive (100 entries).
+ */
 export const MAX_ENTRY_COUNT = 100;
 
+/**
+ * Validation result containing status and error messages.
+ */
 export interface ValidationResult {
+  /**
+   * `true` if all validation checks passed without errors.
+   */
   readonly valid: boolean;
+
+  /**
+   * List of human-readable error messages explaining any detected violations.
+   */
   readonly errors: string[];
 }
 
+/**
+ * Checks whether an entry filename is safe and free of directory traversal vulnerabilities.
+ *
+ * Rejects absolute paths (`/foo`), path parent traversals (`..`), backslashes, double slashes,
+ * and characters outside alphanumeric and `_-./`.
+ *
+ * @param name File path within the ZIP archive.
+ * @returns `true` if the path is safe to extract or inspect, otherwise `false`.
+ *
+ * @example
+ * ```ts
+ * isSafeEntryName("manifest.json");       // true
+ * isSafeEntryName("icons/icon.png");       // true
+ * isSafeEntryName("../secret.txt");        // false (traversal)
+ * isSafeEntryName("/etc/passwd");          // false (absolute path)
+ * ```
+ */
 export function isSafeEntryName(name: string): boolean {
   if (!name || name.trim() === "") return false;
   if (name.startsWith("/") || name.startsWith("\\")) return false;
@@ -30,6 +111,30 @@ export function isSafeEntryName(name: string): boolean {
   return /^[a-zA-Z0-9_\-./]+$/.test(name);
 }
 
+/**
+ * Validates a parsed `manifest.json` against Zenith Manifest V2 rules.
+ *
+ * Checks:
+ * - Root object is non-null
+ * - `id` is a valid identifier (1-128 chars `[A-Za-z0-9._-]`)
+ * - `name` and `version` are non-empty strings
+ * - `packageFormat` is `"zpk/v2"` (or legacy `"zpk/v1"`)
+ * - `capabilities` is a non-empty array
+ *
+ * @param manifest Raw parsed JSON object.
+ * @returns {@link ValidationResult} with validation status and error list.
+ *
+ * @example
+ * ```ts
+ * const result = validateManifest({
+ *   id: "my_provider",
+ *   name: "My Provider",
+ *   version: "1.0.0",
+ *   capabilities: ["CATALOG"]
+ * });
+ * console.log(result.valid); // true
+ * ```
+ */
 export function validateManifest(manifest: any): ValidationResult {
   const errors: string[] = [];
 
@@ -63,6 +168,35 @@ export function validateManifest(manifest: any): ValidationResult {
   };
 }
 
+/**
+ * Validates that a `.zpk` package envelope satisfies physical archive constraints.
+ *
+ * Enforces:
+ * - Entry count <= 100 entries ({@link MAX_ENTRY_COUNT})
+ * - Total uncompressed size <= 32 MiB ({@link MAX_TOTAL_UNCOMPRESSED_BYTES})
+ * - Entrypoint size <= 5 MiB ({@link MAX_ENTRYPOINT_BYTES})
+ * - `manifest.json` size <= 256 KiB ({@link MAX_MANIFEST_BYTES})
+ * - Path traversal security via {@link isSafeEntryName}
+ * - No banned native/compiled binaries (`.jar`, `.dex`, `.class`, `.so`, `.dll`, `.dylib`, `.exe`, `.apk`) in `zpk/v2`
+ * - Mandatory presence of `manifest.json` and declared entrypoint (e.g. `index.js`)
+ *
+ * @param entries List of file names and uncompressed sizes in the archive.
+ * @param manifest The parsed plugin manifest.
+ * @returns {@link ValidationResult} with validation status and error list.
+ *
+ * @example
+ * ```ts
+ * const result = validateEnvelope([
+ *   { name: "manifest.json", size: 1024 },
+ *   { name: "index.js", size: 120000 },
+ *   { name: "icon.png", size: 45000 }
+ * ], manifest);
+ *
+ * if (!result.valid) {
+ *   console.error("Envelope validation failed:", result.errors);
+ * }
+ * ```
+ */
 export function validateEnvelope(
   entries: Array<{ name: string; size: number }>,
   manifest: PluginManifest

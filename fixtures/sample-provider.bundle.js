@@ -6596,6 +6596,11 @@ if (typeof globalThis !== "undefined") {
 
   // src/broker.ts
   var FetchHeaders = class {
+    /**
+     * Creates a new FetchHeaders instance from a dictionary of header values.
+     *
+     * @param init Optional dictionary of key-value header pairs.
+     */
     constructor(init) {
       __publicField(this, "map", /* @__PURE__ */ new Map());
       if (!init) return;
@@ -6608,21 +6613,47 @@ if (typeof globalThis !== "undefined") {
         this[lowerKey] = stringVal;
       }
     }
+    /**
+     * Retrieves the value of a header by name (case-insensitive).
+     *
+     * @param name The header name to look up.
+     * @returns The header value, or `null` if the header is not present.
+     */
     get(name) {
       return this.map.get(name.toLowerCase()) ?? null;
     }
+    /**
+     * Checks whether a header exists in the collection (case-insensitive).
+     *
+     * @param name The header name to check.
+     * @returns `true` if the header exists, otherwise `false`.
+     */
     has(name) {
       return this.map.has(name.toLowerCase());
     }
+    /**
+     * Executes a callback function for each header entry.
+     *
+     * @param callback Function receiving value and key.
+     */
     forEach(callback) {
       this.map.forEach((value, key) => callback(value, key));
     }
+    /**
+     * Returns an iterator of `[key, value]` pairs.
+     */
     entries() {
       return this.map.entries();
     }
+    /**
+     * Returns an iterator of header names.
+     */
     keys() {
       return this.map.keys();
     }
+    /**
+     * Returns an iterator of header values.
+     */
     values() {
       return this.map.values();
     }
@@ -6654,15 +6685,42 @@ if (typeof globalThis !== "undefined") {
     }
   };
   var ProviderContext = class {
+    /**
+     * Constructs a new ProviderContext.
+     *
+     * @param providerId Unique ID of the provider plugin.
+     * @param settingsSnapshot In-memory dictionary of current settings (primarily for unit tests).
+     */
     constructor(providerId = "provider", settingsSnapshot = {}) {
       this.providerId = providerId;
       this.settingsSnapshot = settingsSnapshot;
+      /**
+       * Structured logger writing into Zenith's Kermit logging engine.
+       */
       __publicField(this, "logger");
       this.logger = new DefaultProviderLogger(providerId);
     }
     /**
      * Performs an HTTP request mediated by the Zenith host Ktor broker.
-     * Host enforces redirect domain allowlists, user-agent headers, and body byte quotas.
+     *
+     * Security & Quota Guarantees:
+     * - Destination URL and all redirect targets MUST match the `hosts` allowlist declared in `manifest.json`.
+     * - Maximum response size is capped at 16 MiB per request.
+     * - Cookie jars and User-Agent headers are managed securely by the host.
+     *
+     * @param url Fully qualified HTTP/HTTPS URL.
+     * @param init Optional request parameters (headers, body, method, timeout).
+     * @returns Brokered HTTP response with `.text()` and `.json()` decoders.
+     *
+     * @example
+     * ```ts
+     * const res = await context.fetch("https://api.example.com/items", {
+     *   method: "POST",
+     *   headers: { "Content-Type": "application/json" },
+     *   body: JSON.stringify({ page: 1 })
+     * });
+     * const json = await res.json();
+     * ```
      */
     async fetch(url, init) {
       if (typeof globalThis.__zenith_host_fetch === "function") {
@@ -6720,6 +6778,16 @@ if (typeof globalThis !== "undefined") {
     }
     /**
      * Retrieves a setting value scoped to this provider.
+     *
+     * Reads from Zenith's encrypted secure preference store.
+     *
+     * @param key The setting key defined in `settings.json` or `manifest.json`.
+     * @returns The configured string value, or `undefined` if unset.
+     *
+     * @example
+     * ```ts
+     * const apiKey = await context.getSetting("api_key");
+     * ```
      */
     async getSetting(key) {
       if (typeof globalThis.__zenith_host_get_setting === "function") {
@@ -6730,6 +6798,16 @@ if (typeof globalThis !== "undefined") {
     }
     /**
      * Persists a setting value scoped to this provider.
+     *
+     * Writes into Zenith's persistent preference store.
+     *
+     * @param key The setting key to persist.
+     * @param value The value to save.
+     *
+     * @example
+     * ```ts
+     * await context.setSetting("token", sessionToken);
+     * ```
      */
     async setSetting(key, value) {
       this.settingsSnapshot[key] = value;
@@ -6739,6 +6817,16 @@ if (typeof globalThis !== "undefined") {
     }
     /**
      * Resolves the active provider mirror URL chosen by user preference.
+     *
+     * If the user selected a custom mirror in provider settings, this returns that URL.
+     *
+     * @returns The active mirror base URL.
+     *
+     * @example
+     * ```ts
+     * const mirror = await context.getMirror();
+     * const url = `${mirror}/catalog`;
+     * ```
      */
     async getMirror() {
       if (typeof globalThis.__zenith_host_get_mirror === "function") {
@@ -6748,6 +6836,17 @@ if (typeof globalThis !== "undefined") {
     }
     /**
      * Mediates stream extraction through host-registered StreamExtractors.
+     *
+     * Allows a provider to delegate video stream extraction to built-in or plugin extractors.
+     *
+     * @param extractorName The extractor identifier (e.g. `"sibnet"`, `"kodik"`).
+     * @param url The embed URL to resolve.
+     * @returns Array of resolved playable media streams.
+     *
+     * @example
+     * ```ts
+     * const streams = await context.resolveStream("sibnet", embedUrl);
+     * ```
      */
     async resolveStream(extractorName, url) {
       if (typeof globalThis.__zenith_host_resolve_stream === "function") {

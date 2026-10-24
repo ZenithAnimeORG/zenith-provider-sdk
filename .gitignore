@@ -8,3 +8,5 @@ local.properties
 node_modules/
 dist/
 *.tgz
+docs/.vitepress/dist/
+docs/.vitepress/cache/

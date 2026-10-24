@@ -43,7 +43,10 @@
   "scripts": {
     "build": "tsc && node esbuild.config.mjs",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "docs:generate": "npm --prefix .. run docs:generate",
+    "docs:dev": "npm --prefix .. run docs:dev",
+    "docs:build": "npm --prefix .. run docs:build"
   },
   "dependencies": {
     "cheerio": "^1.0.0"

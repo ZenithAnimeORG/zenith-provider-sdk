@@ -6,11 +6,19 @@ declare global {
   var __zenith_dispatch: ((requestJson: string) => Promise<string>) | undefined;
 }
 
+/**
+ * Wire response returned across the IPC boundary to the Zenith host runtime.
+ */
 export interface DispatchResponse {
+  /** Response status kind: `"Success"` or `"Failed"`. */
   kind: "Success" | "Failed";
+  /** Duplicate status type field for backwards-compatible JSON deserializers. */
   type: "Success" | "Failed";
+  /** Payload value returned on success. */
   value?: any;
+  /** Error code returned on failure (e.g. `"PROVIDER_FAILURE"`). */
   code?: string;
+  /** Human-readable error message returned on failure. */
   message?: string;
 }
 
